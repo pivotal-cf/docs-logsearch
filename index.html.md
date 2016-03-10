@@ -1,0 +1,82 @@
+---
+title: Pivotal Cloud Foundry&reg; Log Search
+owner: London Services
+---
+
+This is documentation for the [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) tile; which deploys
+an Elastic ELK stack customised for analysing the logs of interest to Operators from other PCF tiles.
+
+## Product snapshot
+
+<dl>
+<dt>Current [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) Details</dt>
+<dd><strong>Version</strong>: v0.8-alpha </dd>
+<dd><strong>Release Date</strong>: March 2016</dd>
+<dd><strong>Software component version</strong>: Elasticsearch 2.2.0, Logstash 2.2.0, Kibana 4.4.0, Redis 2.8.4</dd>
+<dd><strong>Compatible Ops Manager Version(s)</strong>: 1.7.x</dd>
+<dd><strong>Compatible Elastic Runtime Version(s)</strong>:  1.7.x</dd>
+<dd><strong>vSphere support?</strong> Yes</dd>
+<dd><strong>AWS support?</strong> Yes</dd>
+</dl>
+
+## Install via Pivotal Operations Manager
+
+To install PCF Log Search, follow the procedure for installing Pivotal Ops Manager tiles:
+
+0. Download the product file from [Pivotal Network](https://network.pivotal.io/).
+0. Upload the product file to your Ops Manager installation.
+0. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
+0. Add `Log Search` Tile version `0.8-alpha`.  
+0. Configure Assign AZs and Networks.
+0. Configure Settings 
+  0. Log retention period in days
+  0. IP of the OpsManager Director - you can get this from the Ops Manager Director Tile > Status tab
+  0. NATS Credentials for the OpsManager Director - you can get this from the Ops Manager Director Tile > Credentials tab
+0. Apply changes to install `Log Search`
+
+## Application Logs
+
+Once you have installed the product, it automatically subscribes to your Elastic Runtime firehose and starts consuming all application logs.
+
+## Elastic Runtime and Data Service Component Logs
+
+You can configure the Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router via syslog over TCP.
+
+<p class="note"><strong>Note</strong>: Syslog over UDP is not supported</p>
+
+
+0.  Navigate to `Log Search` Tile > Status, and find the `Router` VM's IP.
+0.  Update `Pivotal Elastic Runtime` Tile > System Logging endpoints using above IP, port `514` and protocol `TCP`.
+0.  Update `RabbitMQ for PCF` Tile > Syslog using above IP, port `514`.
+0.  Update other tiles Syslog forwarder settings using above IP, port `514` and protocol `TCP`.
+0.  Apply Changes
+
+## Kibana 
+
+Kibana is a web application that allows you to search logs sent to Log Search, construct visualizations of searches and construct dashboards from collections of visualizations.
+
+If you have the Elastic Runtime installed; Kibana is available at:
+
+```
+https://logsearch.<system_domain>
+```
+
+You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager; as part of the Router job 
+
+## Installing without Elastic Runtime
+
+It is possible to install the Log Search tile without also installing the Elastic Runtime.
+
+In this case you will need to configure your own SSL certificate, DNS settings and Load Balancer as detailed below:
+
+0. Configure a DNS entry (eg, logsearch.mydomain.com) to resolve to your load balancer.
+0. Register a SSL certificate for logsearch.mydomain.com with your load balancer
+0. Configure your load balancer to forward traffic to https://logsearch.mydomain.com:443 to the `Router` VM's IP, port 80. 
+
+<p class="note"><strong>Note</strong>: Your load balancer must do the SSL termination, and forward unencrypted HTTP traffic to the router.</p> NB.  
+
+## Further Reading
+
+* [Official Elastic Elasticsearch 2.2.0 Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/2.2/index.html)
+* [Official Elastic Logstash Documentation](https://www.elastic.co/guide/en/logstash/2.2/index.html)
+* [Official Elastic Kibana 4.4 Documentation](https://www.elastic.co/guide/en/kibana/4.4/index.html)

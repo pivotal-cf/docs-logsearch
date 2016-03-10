@@ -1,0 +1,19 @@
+---
+title: Pivotal Cloud Foundry&reg; Log Search
+owner: London Services
+---
+
+Release notes for [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/elk)
+
+### 0.8-alpha
+**Release Date: March 2016**
+
+#### Overview
+
+* Focused on Operators Log Analysis needs
+* Support for common data services (MySQL, RabbitMQ, and Redis)
+* Latest Elastic ELK stack - E & L v2.2.0, K v4.4.0
+
+### Known Issues
+
+* None
