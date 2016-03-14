@@ -3,10 +3,10 @@ title: Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
-This is documentation for the [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) tile; which deploys
+This is documentation for the [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) tile, which deploys
 an Elastic ELK stack customised for analysing the logs of interest to Operators from other PCF tiles.
 
-## Product snapshot
+## Product Snapshot
 
 <dl>
 <dt>Current [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) Details</dt>
@@ -55,13 +55,13 @@ You can configure the Elastic Runtime and other Data Service tiles to send their
 
 Kibana is a web application that allows you to search logs sent to Log Search, construct visualizations of searches and construct dashboards from collections of visualizations.
 
-If you have the Elastic Runtime installed; Kibana is available at:
+If you have Elastic Runtime installed, Kibana is available at:
 
 ```
 https://logsearch.<system_domain>
 ```
 
-You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager; as part of the Router job 
+You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager as part of the Router job.
 
 ## Installing without Elastic Runtime
 

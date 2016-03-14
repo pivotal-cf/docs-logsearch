@@ -3,7 +3,7 @@ title: Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
-# Resource requirements for Pivotal Cloud Foundry&reg Log Search;
+## Resource requirements for Pivotal Cloud Foundry&reg; Log Search
 
 These are the default resource and IP requirements for installing the tile:
 
