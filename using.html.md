@@ -66,52 +66,6 @@ Once you have set up the Available Fields and set your time-scale, you can furth
 
 For more information on using the Search bar to further filter your search results, see the [Kibana user guide](https://www.elastic.co/guide/en/kibana/current/discover.html#search).
 
-### Further information about tags
-
-In the Available Fields pane, tags are denoted by a prefixing **@**, and show information that Log Search has extrapolated from the raw data and are considered useful in interpreting the data. These will always be displayed at the top of the Available Fields pane for ease of access.
-
-Some of these are described in more detail below:
-
-* **@timestamp**
-
-    This returns the time that the message was generated. Sometimes a message will be given multiple timestamps - this field will always return the timestamp closest to the time the message was created.
-
-* **@type**
-
-    If the message is a metric, @type determines the type of metric that has been returned. We currently support **CounterEvent**, **ValueMetric**, **LogMessage** and **ContainerMetric**. If none of these is found, the type will always return syslog.
-
-* **@level**
-
-    This always returns 'INFO', 'WARN' or 'ERROR', and defines the urgency of the message.
-
-* **@message**
-
-    This is the full @raw message, including information taken from the syslog header like Time Stamp and source IP.
-
-* **@source.deployment**
-
-    This is taken from the job field, but can not always be determined due to some jobs having the same name on different deployments.
-
-* **@source.host**
-
-    This is, where possible, the IP of the host VM and is taken directly from the syslog headers. If this information is not available, it will instead be a GUID.
-
-* **@source.ip**
-
-    This is the ip of the host VM.
-
-* **@source.job**
-
-    This shows the BOSH deployed job name from which the message was sent.
-
-* **@source.program**
-
-    This is the process within the job from which the message was sent.
-
-* **@source.vm**
-
-    This contains both the BOSH deployed job name and the index of the VM in one field.
-
 <a id="creating-a-visualization"></a>
 ## Creating a visualization
 
