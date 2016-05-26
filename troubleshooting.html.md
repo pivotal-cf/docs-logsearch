@@ -29,10 +29,15 @@ There are several reasons for logs not showing on Kibana. Find below some common
 
 The Queue (redis) keeps a backup file on `/var/vcap/store/queue/reddis-appendonly.aof` which contains every operation that happened on it. Once in a while, it will purge redundant entries from the file, keeping it small enough to be loaded by Redis (it purges by removing entries with entries that were removed from the queue).
 
-When the queue is overflowing, it means that there are more data getting into the queue than being removed from it, which makes the backup file larger, and larger. Eventually, the file will be bigger than the available RAM and the queue will fail to start, as redis cannot load such large file in memory. The only recovery is to remove the file and restart the queue with monit:
+#### Recovering from a queue overflow
 
-```
-monit restart queue
-```
+When the queue is overflowing, it means that there are more data getting into the queue than being removed from it, which makes the backup file larger, and larger. Eventually, the file will be bigger than the available RAM and the queue will fail to start, as redis cannot load such large file in memory. This is a known issue with the current queue configuration; and something we hope to be able to prevent happening in future releases.
+
+For now; the only recovery is to remove the `/var/vcap/store/queue/reddis-appendonly.aof` file and restart the queue with monit.  Note that in doing so you will loose the data stored in the queue; so you should scale up your cluster to prevent this happening.
+
+0. SSH into the queue VM and become `root`
+0. `monit stop queue_redis`
+0. `rm /var/vcap/store/queue/redis-appendonly.aof`
+0. `monit start queue_redis`
 
 ---
