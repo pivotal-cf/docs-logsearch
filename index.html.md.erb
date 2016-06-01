@@ -3,13 +3,13 @@ title: Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
-This is documentation for the [Pivotal Cloud Foundry Log Search](https://network.pivotal.io/products/logsearch) tile, 
-which deploys an Elastic ELK stack customized for analyzing the logs of interest to operators from other PCF tiles.
+This documentation is for the [Pivotal Cloud Foundry&reg; (PCF) Log Search](https://network.pivotal.io/products/logsearch) tile, formerly stayUp.io ELK for Pivotal Cloud Foundry, 
+which deploys a customized Elastic ELK stack (Elasticsearch, Logstash, and Kibana). PCF operators can use the Log Search tile to analyze logs from the other tiles in their deployment.
 
-## Product Snapshot
+## <a id="snapshot"></a>Product Snapshot
 
 <dl>
-<dt>Current <a href="https://network.pivotal.io/products/logsearch">PCF Log Search</a> details</dt>
+<dt>Current <a href="https://network.pivotal.io/products/logsearch">PCF Log Search</a> details:</dt>
 <dd><strong>Version</strong>: v1.0.0-beta </dd>
 <dd><strong>Release Date</strong>: May 2016</dd>
 <dd><strong>Software component version</strong>: Elasticsearch 2.2.0, Logstash 2.2.0, Kibana 4.4.0, Redis 2.8.4</dd>
@@ -19,27 +19,19 @@ which deploys an Elastic ELK stack customized for analyzing the logs of interest
 <dd><strong>AWS support?</strong> Yes</dd>
 </dl>
 
-## Resource Requirements for PCF Log Search
+##<a id="guide"></a>PCF Log Search User Guide
 
-These are the default resource and IP requirements for installing the tile:
+See the following topics for details on installing and using PCF Log Search:
 
-| Component     | Job                                                         | Instances | CPU | Ram   | Ephemeral | Persistent |
-|---------------|-------------------------------------------------------------|-----------|-----|-------|-----------|------------|
-| Elasticsearch | Elasticsearch master node(s)                                | 1         | 2   | 4096  | 4096      | 32000      |
-| Elasticsearch | Elasticsearch data nodes                                    | 2         | 2   | 32000 | 4096      | 500000     |
-| Redis         | Queue                                                       | 1         | 2   | 16000 | 4096      | 32000      |
-| Logstash      | Log parser                                                  | 4         | 1   | 4096  | 4096      | 0          |
-| Logstash      | Ingestor                                                    | 1         | 2   | 2048  | 4096      | 0          |
-| HAProxy       | Router                                                      | 1         | 2   | 1024  | 4096      | 0          |
-| Kibana        | Kibana                                                      | 1         | 1   | 1024  | 4096      | 0          |
-| Curator       | Maintenance                                                 | 1         | 1   | 1024  | 4096      | 0          |
-| Curl          | Enable Shard Allocation (errand)                            | 1         | 1   | 1024  | 4096      | 0          |
-| Tar, gzip     | Compiliation (only during initial install)                  | 4         | 2   | 1024  | 4096      | 0          |
-| All           | Monitor                                                     | 0         | 2   | 32000 | 4096      | 500000     |
+* [Installing Pivotal Cloud Foundry Log Search](./installing.html)
+* [Using Pivotal Cloud Foundry Log Search](./using.html)
+* [Data Dictionary and Search Guide](./search-guide.html)
+* [Troubleshooting Pivotal Cloud Foundry® Log Search](./troubleshooting.html)
 
+## <a id="elastic"></a>Elastic Documentation
 
-## Further Reading
+See these links for Elastic documentation on each component of the ELK stack:
 
-* [Official Elastic Elasticsearch 2.2.0 Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/2.2/index.html)
-* [Official Elastic Logstash Documentation](https://www.elastic.co/guide/en/logstash/2.2/index.html)
-* [Official Elastic Kibana 4.4 Documentation](https://www.elastic.co/guide/en/kibana/4.4/index.html)
+* [Elastic Elasticsearch 2.2.0 Documentation](https://www.elastic.co/guide/en/elasticsearch/reference/2.2/index.html)
+* [Elastic Logstash Documentation](https://www.elastic.co/guide/en/logstash/2.2/index.html)
+* [Elastic Kibana 4.4 Documentation](https://www.elastic.co/guide/en/kibana/4.4/index.html)
