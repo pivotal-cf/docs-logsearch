@@ -45,16 +45,4 @@ If you have the Elastic Runtime installed; Kibana is available at:
 https://logsearch.<system_domain>
 ```
 
-You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager; as part of the Router job
-
-##<a id="installing-elastic-runtime"></a>Install without Elastic Runtime
-
-It is possible to install the Log Search tile without also installing the Elastic Runtime.
-
-In this case you will need to configure your own SSL certificate, DNS settings and Load Balancer as detailed below:
-
-0. Configure a DNS entry (eg, logsearch.mydomain.com) to resolve to your load balancer.
-0. Register a SSL certificate for logsearch.mydomain.com with your load balancer
-0. Configure your load balancer to forward traffic to https://logsearch.mydomain.com:443 to the `Router` VM's IP, port 80.
-
-<p class="note"><strong>Note</strong>: Your load balancer must do the SSL termination, and forward unencrypted HTTP traffic to the router.</p>
+You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager; as part of the Router job.
