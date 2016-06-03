@@ -57,15 +57,3 @@ PCF Log Search can consume logs from both application and component VMs. Install
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
-
-##<a id="installing-elastic-runtime"></a>Install without Elastic Runtime
-
-It is possible to install the Log Search tile without also installing the Elastic Runtime.
-
-In this case you will need to configure your own SSL certificate, DNS settings and Load Balancer as detailed below:
-
-0. Configure a DNS entry (eg, logsearch.mydomain.com) to resolve to your load balancer.
-0. Register a SSL certificate for logsearch.mydomain.com with your load balancer
-0. Configure your load balancer to forward traffic to https://logsearch.mydomain.com:443 to the `Router` VM's IP, port 80.
-
-<p class="note"><strong>Note</strong>: Your load balancer must do the SSL termination, and forward unencrypted HTTP traffic to the router.</p>
