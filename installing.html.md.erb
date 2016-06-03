@@ -3,46 +3,55 @@ title: Installing Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
-##<a id="installation"></a>Install via Pivotal Ops Manager
+This document describes how to install and configure PCF Log Search.
+
+##<a id="installation"></a>Installation with Elastic Runtime
+
+###<a id="resource"></a>Resource Requirements for PCF Log Search
+
+The following table displays the resource requirements for installing the tile:
+
+| Component     | Job                                                         | Instances | CPU | Ram   | Ephemeral | Persistent |
+|---------------|-------------------------------------------------------------|-----------|-----|-------|-----------|------------|
+| Elasticsearch | Elasticsearch master node(s)                                | 1         | 2   | 4096  | 4096      | 32000      |
+| Elasticsearch | Elasticsearch data nodes                                    | 2         | 2   | 32000 | 4096      | 500000     |
+| Redis         | Queue                                                       | 1         | 2   | 16000 | 4096      | 32000      |
+| Logstash      | Log parser                                                  | 4         | 1   | 4096  | 4096      | 0          |
+| Logstash      | Ingestor                                                    | 1         | 2   | 2048  | 4096      | 0          |
+| HAProxy       | Router                                                      | 1         | 2   | 1024  | 4096      | 0          |
+| Kibana        | Kibana                                                      | 1         | 1   | 1024  | 4096      | 0          |
+| Curator       | Maintenance                                                 | 1         | 1   | 1024  | 4096      | 0          |
+| Curl          | Enable Shard Allocation (errand)                            | 1         | 1   | 1024  | 4096      | 0          |
+| Tar, gzip     | Compiliation (only during initial install)                  | 4         | 2   | 1024  | 4096      | 0          |
+| All           | Monitor                                                     | 0         | 2   | 32000 | 4096      | 500000     |
+
+###<a id="installation"></a>Install via Pivotal Ops Manager
 
 To install PCF Log Search, follow the procedure for installing Pivotal Ops Manager tiles:
 
 0. Download the product file from [Pivotal Network](https://network.pivotal.io/).
 0. Upload the product file to your Ops Manager installation.
-0. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
-0. Add `Log Search` Tile version `0.8-alpha`.  
-0. Configure Assign AZs and Networks.
-0. Configure Settings
-  0. Log retention period in days
-  0. IP of the OpsManager Director - you can get this from the Ops Manager Director Tile > Status tab
-  0. NATS Credentials for the OpsManager Director - you can get this from the Ops Manager Director Tile > Credentials tab
-0. Apply changes to install `Log Search`
-
-## Application Logs
-
-After you have installed the product, it automatically subscribes to your Elastic Runtime Firehose and starts consuming all application logs.
-
-##<a id="elastic-runtime"></a>Elastic Runtime and Data Service Component Logs
-
-You can configure the Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router via syslog over TCP.
-
-<p class="note"><strong>Note</strong>: Syslog over UDP is not supported</p>
+0. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.  
+0. Configure **Assign AZs and Networks**.
+0. Configure **Settings**:
+  0. Specify the log retention period in number of days.
+  0. Specify the IP of the OpsManager Director, viewable from the Ops Manager Director tile under the **Status** tab. 
+  0. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
+0. Click **Apply Changes**. 
 
 
-0.  Navigate to `Log Search` Tile > Status, and find the `Router` VM's IP.
-0.  Update `Pivotal Elastic Runtime` Tile > System Logging endpoints using above IP, port `514` and protocol `TCP`.
-0.  Update `RabbitMQ for PCF` Tile > Syslog using above IP, port `514`.
-0.  Update other tiles Syslog forwarder settings using above IP, port `514` and protocol `TCP`.
-0.  Apply Changes
+###<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
 
-##<a id="kibana"></a>Kibana
+PCF Log Search can consume logs from both application and component VMs. Installing PCF Log Search with Elastic Runtime automatically subscribes the service to the Firehose, which outputs all application logs. You can also configure the Elastic Runtime tile and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
-Kibana is a web application that allows you to search logs sent to Log Search, construct visualizations of searches and construct dashboards from collections of visualizations.
+<p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP.</p>
 
-If you have the Elastic Runtime installed; Kibana is available at:
 
-```
-https://logsearch.<system_domain>
-```
-
-You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager; as part of the Router job.
+0.  In the **Log Search** tile, click **Status** and record the IP of the **Router** VM.
+0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
+	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
+	0. **External Syslog Aggregator Port**: Enter `514`. 
+	0. **External Syslog Network Protocol**: Choose `TCP`.
+0.  In the **RabbitMQ for PCF** tile, update the **Slyslog** settings with the IP address from step 1 and port `514`.
+0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
+0.  Click **Apply Changes**. 
