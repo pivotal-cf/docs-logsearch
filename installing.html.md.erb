@@ -5,9 +5,7 @@ owner: London Services
 
 This document describes how to install and configure PCF Log Search.
 
-##<a id="installation"></a>Installation with Elastic Runtime
-
-###<a id="resource"></a>Resource Requirements for PCF Log Search
+##<a id="resource"></a>Resource Requirements for PCF Log Search
 
 The following table displays the resource requirements for installing the tile:
 
@@ -25,7 +23,7 @@ The following table displays the resource requirements for installing the tile:
 | Tar, gzip     | Compiliation (only during initial install)                  | 4         | 2   | 1024  | 4096      | 0          |
 | All           | Monitor                                                     | 0         | 2   | 32000 | 4096      | 500000     |
 
-###<a id="installation"></a>Install via Pivotal Ops Manager
+##<a id="installation"></a>Install
 
 To install PCF Log Search, follow the procedure for installing Pivotal Ops Manager tiles:
 
@@ -40,7 +38,7 @@ To install PCF Log Search, follow the procedure for installing Pivotal Ops Manag
 0. Click **Apply Changes**. 
 
 
-###<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
+##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
 
 PCF Log Search can consume logs from both application and component VMs. Installing PCF Log Search with Elastic Runtime automatically subscribes the service to the Firehose, which outputs all application logs. You can also configure the Elastic Runtime tile and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
