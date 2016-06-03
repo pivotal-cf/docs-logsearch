@@ -9,7 +9,7 @@ This document describes how to install and configure PCF Log Search.
 
 ###<a id="resource"></a>Resource Requirements for PCF Log Search
 
-To install the PCF Log Search tile, you need to allocate the following resources and IPs:
+The following table displays the resource requirements for installing the tile:
 
 | Component     | Job                                                         | Instances | CPU | Ram   | Ephemeral | Persistent |
 |---------------|-------------------------------------------------------------|-----------|-----|-------|-----------|------------|
@@ -52,8 +52,6 @@ PCF Log Search can consume logs from both application and component VMs. Install
 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 	0. **External Syslog Network Protocol**: Choose `TCP`.
-0.  In the **RabbitMQ for PCF** tile, click **System Logging**. Complete the following fields:
- 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
-	0. **External Syslog Aggregator Port**: Enter `514`. 
+0.  In the **RabbitMQ for PCF** tile, update the **Slyslog** settings with the IP address from step 1 and port `514`.
 0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
