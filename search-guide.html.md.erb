@@ -1,13 +1,49 @@
 ---
-title: Data Dictionary and Search Guide 
+title: Understanding Data in PCF Log Search 
 owner: London Services
 ---
 
 ##<a id="data-dictionary"></a> Data Dictionary
 
-In the Available Fields list of the Discover tab, elevated fields are denoted by a prefixing **@**, and show information
-that Log Search has extrapolated from the raw data and are considered useful in interpreting the data.
-These will always be displayed at the top of the Available Fields list for ease of access.
+Log Search receives data from other tiles in JSON format. However, not all tiles specify the same pieces of data in the same way. For instance, some tile logs specify timestamp as `TS`, while others use `timestamp`. Additionally, they format the value for the timestamp field differently, some include the time zone while others do not. To solve this problem, Log Search uses uses the following tags to refer to the same field for all tiles. 
+
+
+<table id='roles-permissions' border='1'>
+    <col width="20%">
+    <col width="45%">
+    <col width="35%">
+	<tr>
+		<th>Tag</th>
+		<th>Description</th>
+		<th>Example</th>
+	</tr>
+	<tr>
+		<td>@timestamp</td>
+		<td>Parsed timestamp of log message, in UTC. Defaults to parse time. Overridden by syslog_timestamp, or timestamp pulled from specific log message</td>
+		<td><code>2015-11-18T15:00:04.896Z</code></td>
+	</tr>
+	<tr>
+		<td>@timestamp_ns</td>
+		<td>Nano-seconds since Unix Epoch (optional)</td>
+		<td>For a timestamp of 1463503340.250173807, @timestamp_ns would be 173,807</td>
+	</tr>
+	<tr>
+		<td>@level</td>
+		<td>Indicates the severity level of the message</td>
+		<td>Can be one of: DEBUG, INFO, WARN, ERROR or FATAL</td>
+	</tr>
+	<tr>
+		<td>@message</td>
+		<td>Unparsed / human readable text of log. May be empty if all data has been parsed into separate fields</td>
+		<td>Switchboard.Error routing to backend</td>
+	</tr>
+	<tr>
+		<td>@raw</td>
+		<td>The raw unparsed message</td>
+		<td><code><139>2016-01-28T21:17:52.856995+00:00 10.0.16.88 switchboard [job=proxy-partition-e3353cc4ddedf43fa7a6 index=0] {“timestamp”:“1454015872.856954575”,“source”:“Switchboard”,“message”:“Switchboard.Error routing to backend”,“log_level”:2,“data”:{“error”:“No active Backend”}}</code></td>
+	</tr>
+</table>
+
 
 | Field      				| Description                                                                                                                                      | Example                                                                                                                                           |
 |-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -24,6 +60,12 @@ These will always be displayed at the top of the Available Fields list for ease 
 | @source.vm				| Combination of @source.job and @source.index                                                   																									|	'elasticseach_data/0'														 	 																																													      |
 | @source.program		| Program emitting the logs   |	cloud\_controller\_ng													 	 																																													      		|
 | tags							| Arbitrary set of tags    |	syslog_standard, NATS									 	 																																													      		|
+
+Start of list:
+
+* **@timestamp**: Parsed timestamp of log message, in UTC. Defaults to parse time. Overridden by syslog_timestamp, or timestamp pulled from specific log message. Example: `2015-11-18T15:00:04.896Z`.
+* **@timestamp_ns**: Nano-seconds since Unix Epoch (optional). Example: ror a timestamp of `1463503340.250173807`, **@timestamp_ns** would be `173,807`.
+* **@level**: Indicates the severity level of the message. Example: Can be one of: `DEBUG`, `INFO`, `WARN`, `ERROR` or `FATAL`.
 
 
 ##<a id="search-examples"></a> Search Examples
