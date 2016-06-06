@@ -1,13 +1,9 @@
 ---
-title: Data Dictionary and Search Guide 
+title: Log Search Tags Dictionary
 owner: London Services
 ---
 
-##<a id="data-dictionary"></a> Data Dictionary
-
-In the Available Fields list of the Discover tab, elevated fields are denoted by a prefixing **@**, and show information
-that Log Search has extrapolated from the raw data and are considered useful in interpreting the data.
-These will always be displayed at the top of the Available Fields list for ease of access.
+The following table lists the generated tags that Log Search provides. Log Search attaches these tags when it recognizes that the data belongs to a common log field category. These tags appear at the top of the **Available Fields** list in Kibana, above the raw keys from the source JSON logs sent to Log Search. You can use these tags to to [filter data](./using.html#get-started) and more effectively search your logs. 
 
 | Field      				| Description                                                                                                                                      | Example                                                                                                                                           |
 |-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -24,29 +20,3 @@ These will always be displayed at the top of the Available Fields list for ease 
 | @source.vm				| Combination of @source.job and @source.index                                                   																									|	'elasticseach_data/0'														 	 																																													      |
 | @source.program		| Program emitting the logs   |	cloud\_controller\_ng													 	 																																													      		|
 | tags							| Arbitrary set of tags    |	syslog_standard, NATS									 	 																																													      		|
-
-
-##<a id="search-examples"></a> Search Examples
-
-Making search queries against these fields is relatively straightforward.
-
-The following examples are search queries that can be made from the discover tab.
-
-####Timestamps
-
-The kibana UI comes with an easy way to filter logs by time. Absolute time periods, and time periods relative to now
-are available.
-
-* Relative query: To see logs from the last 4 hours, click on the "Last 15 minutes" button in the top right corner
-of the discover tab, and select "last 4 hours" from the options. To make a more specific relative query, click on the
-"Relative" button on the left hand side navigation bar.
-
-* Absolute query: To see logs during a specific time period in the past, use the "Absolute" option in the left hand side
-navigation bar, and select the time period you wish to view.
-
-
-####Other fields
-
-To search against any of the other fields, type in the search bar a query with the following format: `field:value`
-
-For example: `@source.ip:10.0.16.21`
