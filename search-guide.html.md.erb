@@ -5,18 +5,83 @@ owner: London Services
 
 The following table lists the generated tags that Log Search provides. Log Search attaches these tags when it recognizes that the data belongs to a common log field category. These tags appear at the top of the **Available Fields** list in Kibana, above the raw keys from the source JSON logs sent to Log Search. You can use these tags to to [filter data](./using.html#get-started) and more effectively search your logs. 
 
-| Field      				| Description                                                                                                                                      | Example                                                                                                                                           |
-|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| @timestamp 				| Parsed timestamp of log message, in UTC.  Defaults to parse time.  Overridden by syslog_timestamp, or timestamp pulled from specific log message | 2015-11-18T15:00:04.896Z                                                                                                                          |
-| @timestamp_ns 		| Nano-seconds since Unix Epoch (optional) 																																																	| For a timestamp of 1463503340.250173807, @timestamp_ns would be 173,807                                                                           |
-| @level     				| Indicates the severity level of the message                                                                                                  		| Can be one of: DEBUG, INFO, WARN, ERROR or FATAL																																																	|
-| @message  				| Unparsed / human readable text of log.  May be empty if all data has been parsed into separate fields                                                                                                            | Switchboard.Error routing to backend                                                                                                                                            			|
-| @raw   		 				| The raw unparsed message                                                                                                                         | <139>2016-01-28T21:17:52.856995+00:00 10.0.16.88 switchboard [job=proxy-partition-e3353cc4ddedf43fa7a6 index=0]  {"timestamp":"1454015872.856954575","source":"Switchboard","message":"Switchboard.Error routing to backend","log_level":2,"data":{"error":"No active Backend"}} |
-| @source.deployment| Name of deployment cluster log is from (eg, bosh deployment or Tile name)                                                               |	'CF' if from a cloud foundry job, or 'logsearch' if from a logsearch job														 	 																						|
-| @source.host			| Guid of the container which is running an app. Defaults to @source.ip if this does not apply                                                  |	'4138q23c-1v2c-4a21-9szbc-4b37c11fda0b' if from a container, or '10.0.1.6' if from a vm														 	 															|
-| @source.ip				| IP address of the origin vm                                                  																																		|	10.0.1.6														 	 																																																						|
-| @source.job				| Name of source component                                                 																										|	In a logsearch deployment: 'elasticsearch\_data', 'elasticsearch_master', 'kibana' etc.														 	 															|
-| @source.index			| Instance of source component job                                               									|	0														 	 																																																										|
-| @source.vm				| Combination of @source.job and @source.index                                                   																									|	'elasticseach_data/0'														 	 																																													      |
-| @source.program		| Program emitting the logs   |	cloud\_controller\_ng													 	 																																													      		|
-| tags							| Arbitrary set of tags    |	syslog_standard, NATS									 	 																																													      		|
+<table id='log-search-tags' border='1' class='nice'>
+<col width="25%">
+<col width="35%">
+<col width="40%">
+<tr>
+<th>Tag</th>
+<th>Description</th>
+<th>Example Value</th>
+</tr>
+<tr>
+<td>@level</td>
+<td>Severity level of the message</td>
+<td>Can be one of: <code>DEBUG</code>, <code>INFO</code>, <code>WARN</code>, <code>ERROR</code> or <code>FATAL</code></td>
+</tr>
+<tr>
+<td>@message</td>
+<td>Unparsed, human readable text of log.  May be empty if all data parses into separate fields</td>
+<td><code>Switchboard.Error routing to backend</code></td>
+</tr>
+<tr>
+<td>@raw</td>
+<td>Unparsed log message</td>
+<td><code><139>2016-01-28T21:17:52.856995+00:00 
+10.0.16.88 switchboard [job=proxy-
+partition-e3353cc4ddedf43fa7a6 index=0]  
+{"timestamp":"1454015872.856954575","source":
+"Switchboard","message":"Switchboard.Error 
+routing to backend","log_level":2,"data":
+{"error":"No active Backend"}}`</code></td>
+</tr>
+<tr>
+<td>@source.deployment</td>
+<td>Name of deployment cluster log is from. For example, bosh deployment or tile name</td>
+<td><code>CF</code> if from a Cloud Foundry job, or <code>logsearch</code> if from a logsearch job</td>
+</tr>
+<tr>
+<td>@source.host</td>
+<td>Guid of the container running the app. Defaults to @source.ip if not applicable</td>
+<td>From a container: <code>4138q23c-1v2c-4a21-9szbc-4b37c11fda0b</code>. From a VM: <code>10.0.1.6</code></td>
+</tr>
+<tr>
+<td>@source.index</td>
+<td>Instance of source component job</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>@source.ip</td>
+<td>IP address of the origin VM</td>
+<td><code>10.0.1.6</code></td>
+</tr>
+<tr>
+<td>@source.job</td>
+<td>Name of source component</td>
+<td>In a Log Search deployment: <code>elasticsearch_data</code>, <code>elasticsearch_master</code>, <code>kibana</code>, etc.</td>
+</tr>
+<tr>
+<td>@source.program</td>
+<td>Program emitting the logs</td>
+<td><code>cloud_controller_ng</code></td>
+</tr>
+<tr>
+<td>@source.vm</td>
+<td>Combination of @source.job and @source.index</td>
+<td><code>elasticseach_data/0</code></td>
+</tr>
+<tr>
+<td>tags</td>
+<td>Arbitrary set of tags</td>
+<td><code>syslog_standard, NATS</code></td>
+</tr>
+<tr>
+<td>@timestamp</td>
+<td>Parsed timestamp of log message, in UTC.  Defaults to parse time.  Overridden by <code>syslog_timestamp</code>, or timestamp pulled from specific log message</td>
+<td><code>2015-11-18T15:00:04.896Z</code></td>
+</tr>
+<tr>
+<td>@timestamp_ns</td>
+<td>Nanoseconds since Unix Epoch (optional)</td>
+<td>For a timestamp of <code>1463503340.250173807</code>, @timestamp_ns is <code>173,807</code></td>
+</tr></table>
