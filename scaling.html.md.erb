@@ -1,0 +1,65 @@
+---
+title: Scaling Pivotal Cloud Foundry&reg; Log Search
+owner: London Services
+---
+
+This document describes how to scale PCF Log Search.
+
+## Scaling
+
+If you notice that Log Search is falling behind indexing logs ( ie, you search for all logs and the most recent log found 
+is from a few hours ago ) you need to scale up your cluster.
+
+![Falling behind on log indexing](images/falling-behind-on-log-indexing.png)
+
+Take a look at the Status tab for the Log Search tile; and in particular take note of the load on the 
+Elasticsearch Data nodes and Log parser nodes.
+
+![Log Search Status tab](images/status-tab-logsearch.png)
+
+If load is high on the Elasticsearch Data nodes ( especially if CPU usage > 50% and / or persistent disk use > 70% ) you
+need to add additional Elasticsearch data nodes.
+
+As a general rule of thumb you should also increase the number of Log parser nodes 
+so that you have slightly more Log parser nodes than Elasticsearch Data nodes.
+
+The table below shows some suggested resource configurations for different log volumes.
+
+<table>
+  <tr>
+    <td>Log volume</td>
+    <td>Elasticsearch Data nodes</td>
+    <td>Log parser nodes</td>
+  </tr>
+  <tr>
+    <td>200 / second</td>
+    <td>2 x medium.mem (~8GB RAM) with 50GB persistent disks</td>
+    <td>2 x small (1 CPU)</td>
+  </tr>
+  <tr>
+    <td>2,000 / second</td>
+    <td>~10 x xlarge.mem (~32GB RAM) with 200GB persistent disks</td>
+    <td>~15 x medium (2 CPU)</td>
+  </tr>
+  <tr>
+    <td>10,000 / second</td>
+    <td>~30 x xlarge.mem (~32GB RAM) with 500GB persistent disks</td>
+    <td>~40 x medium (2 CPU)</td>
+  </tr>
+</table>
+
+## High Availability
+
+You can run multiple copies of all jobs except Queue, Router, Cluster Monitor and Maintenance.
+
+You must have an odd number of Elasticsearch Master nodes.
+
+## Reducing resource usage
+
+Cloud Foundry produces a lot of logs; and as a result Log Search can end up consuming a non-trivial portion of your total resource usage.
+
+There are 2 strategies for reducing your Log Search&amp;s resource usage
+
+1.  Reduce the retention period - shorter retention periods will dramatically reduce the amount of disk resource required.
+2.  Index less data - If you are indexing the firehose, it is likely that Application logs make up a large portion of the total logs indexed.  
+A search for `tags:LogMessage` will show logs from Apps running on Cloud Foundry; from there a Visualization on `cf.app_id` will reveal if any apps are logging a disproportionaly high number of logs and should have their logging verbosity reduced.
