@@ -3,53 +3,56 @@ title: Installing Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
 This document describes how to install and configure PCF Log Search.
 
-##<a id="resource"></a>Resource Requirements for PCF Log Search
+## <a id="install"></a>Install via Ops Manager
 
-The following table displays the resource requirements for installing the tile:
+To install PCF Log Search, follow the standard procedure for installing Pivotal Ops Manager tiles:
 
-| Component     | Job                                                         | Instances | CPU | Ram   | Ephemeral | Persistent |
-|---------------|-------------------------------------------------------------|-----------|-----|-------|-----------|------------|
-| Elasticsearch | Elasticsearch master node(s)                                | 1         | 2   | 4096  | 4096      | 32000      |
-| Elasticsearch | Elasticsearch data nodes                                    | 2         | 2   | 32000 | 4096      | 500000     |
-| Redis         | Queue                                                       | 1         | 2   | 16000 | 4096      | 32000      |
-| Logstash      | Log parser                                                  | 4         | 1   | 4096  | 4096      | 0          |
-| Logstash      | Ingestor                                                    | 1         | 2   | 2048  | 4096      | 0          |
-| HAProxy       | Router                                                      | 1         | 2   | 1024  | 4096      | 0          |
-| Kibana        | Kibana                                                      | 1         | 1   | 1024  | 4096      | 0          |
-| Curator       | Maintenance                                                 | 1         | 1   | 1024  | 4096      | 0          |
-| Curl          | Enable Shard Allocation (errand)                            | 1         | 1   | 1024  | 4096      | 0          |
-| Tar, gzip     | Compiliation (only during initial install)                  | 4         | 2   | 1024  | 4096      | 0          |
-| All           | Monitor                                                     | 0         | 2   | 32000 | 4096      | 500000     |
-
-##<a id="installation"></a>Install
-
-To install PCF Log Search, follow the procedure for installing Pivotal Ops Manager tiles:
-
-0. Download the product file from [Pivotal Network](https://network.pivotal.io/).
-0. Upload the product file to your Ops Manager installation.
-0. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.  
-0. Configure **Assign AZs and Networks**.
-0. Configure **Settings**:
-  0. Specify the log retention period in number of days.
-  0. Specify the IP of the OpsManager Director, viewable from the Ops Manager Director tile under the **Status** tab. 
-  0. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
-0. Click **Apply Changes**. 
-
+1. Download the product file from the [PCF Metrics section of Pivotal Network](https://network.pivotal.io/products/pcf-metrics#/releases/1832).
+1. Upload the product file to your Ops Manager installation.
+1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
+1. Configure **Assign AZs and Networks**.
+	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ).</p>
+1. Configure **Settings**:
+	1. Specify the log retention period in number of days. The default is `7`.
+	1. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
+1. Click **Apply Changes**. 
 
 ##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
 
-PCF Log Search can consume logs from both application and component VMs. Installing PCF Log Search with Elastic Runtime automatically subscribes the service to the Firehose, which outputs all application logs. You can also configure the Elastic Runtime tile and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
-<p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP.</p>
+You can configure Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
+<p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
 
 0.  In the **Log Search** tile, click **Status** and record the IP of the **Router** VM.
 0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 	0. **External Syslog Network Protocol**: Choose `TCP`.
-0.  In the **RabbitMQ for PCF** tile, update the **Slyslog** settings with the IP address from step 1 and port `514`.
+0.  In the **RabbitMQ for PCF** tile, update the **Syslog** settings with the IP address from step 1 and port `514`.
 0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
+
+## <a id="firehose"></a> Attach to the Elastic Runtime Firehose
+
+You can attach to the Elastic Runtime firehose to ingest application logs and platform metrics by following these steps:
+
+<p class="note warning">
+<strong>WARNING: </strong> The Elastic Runtime firehose sends a <strong>large</strong> amount of data, and you will probably need to scale up your cluster to handle the additional load.  Please see the <a href=./scaling.html>Scaling</a> topic for more details.
+</p>
+1. Navigate to **Log Search** tile > **Resource Config** > **Firehose** > **Syslog** and change the value from `0` to `1` instances.
+
+2. Click **Apply changes**. 
