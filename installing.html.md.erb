@@ -14,7 +14,7 @@ owner: London Services
     }
 </style>
 
-This document describes how to install and configure PCF Log Search.
+This document describes how to install and configure Pivotal Cloud Foundry (PCF) Log Search.
 
 ## <a id="install"></a>Install via Ops Manager
 
@@ -42,8 +42,8 @@ You can configure Elastic Runtime and other Data Service tiles to send their com
 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 	0. **External Syslog Network Protocol**: Choose `TCP`.
-0.  In the **RabbitMQ for PCF** tile, update the **Syslog** settings with the IP address from step 1 and port `514`.
-0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
+0.  In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1 and port `514`.
+0.  For any other tiles you want to analyze with Log Search, update the syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
 
 ## <a id="firehose"></a> Attach to the Elastic Runtime Firehose
@@ -51,8 +51,8 @@ You can configure Elastic Runtime and other Data Service tiles to send their com
 You can attach to the Elastic Runtime firehose to ingest application logs and platform metrics by following these steps:
 
 <p class="note warning">
-<strong>WARNING: </strong> The Elastic Runtime firehose sends a <strong>large</strong> amount of data, and you will probably need to scale up your cluster to handle the additional load.  Please see the <a href=./scaling.html>Scaling</a> topic for more details.
+<strong>WARNING: </strong> The Elastic Runtime firehose sends a large amount of data, and you will probably need to scale up your cluster to handle the additional load.  Please see the <a href=./scaling.html>Scaling</a> topic for more details.
 </p>
-1. Navigate to **Log Search** tile > **Resource Config** > **Firehose** > **Syslog** and change the value from `0` to `1` instance.
+1. Navigate to the **Resource Config** section of the **Log Search** tile and change the value for **Firehose to Syslog** from `0` to `1` instance.
 
 2. Click **Apply Changes**. 

@@ -71,17 +71,12 @@ routing to backend","log_level":2,"data":
 <td><code>elasticseach_data/0</code></td>
 </tr>
 <tr>
-<td>tags</td>
-<td>Arbitrary set of tags</td>
-<td><code>syslog_standard, NATS</code></td>
-</tr>
-<tr>
 <td>@timestamp</td>
 <td>Parsed timestamp of log message, in UTC.  Defaults to parse time.  Overridden by <code>syslog_timestamp</code>, or timestamp pulled from specific log message</td>
 <td><code>2015-11-18T15:00:04.896Z</code></td>
 </tr>
 <tr>
 <td>@timestamp_ns</td>
-<td>Nanoseconds since Unix Epoch (optional)</td>
+<td>Nanoseconds since Unix Epoch. Not all logs include nanosecond precision.</td>
 <td>For a timestamp of <code>1463503340.250173807</code>, @timestamp_ns is <code>173,807</code></td>
 </tr></table>
