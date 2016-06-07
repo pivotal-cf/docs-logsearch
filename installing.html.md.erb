@@ -3,66 +3,56 @@ title: Installing Pivotal Cloud Foundry&reg; Log Search
 owner: London Services
 ---
 
+<style>
+    .note.warning {
+        background-color: #fdd;
+        border-color: #fbb
+    }
+
+    .note.warning:before {
+        color: #f99;
+    }
+</style>
+
 This document describes how to install and configure PCF Log Search.
 
-# Install via Pivotal Operations Manager
+## <a id="install"></a>Install via Ops Manager
 
 To install PCF Log Search, follow the standard procedure for installing Pivotal Ops Manager tiles:
 
 1. Download the product file from the [PCF Metrics section of Pivotal Network](https://network.pivotal.io/products/pcf-metrics#/releases/1832).
-2. Upload the product file to your Ops Manager installation.
-3. Click **Add** next to the uploaded product description in the Available Products view to add this product to your staging area.
-    1. Add Log Search tile 
-    2. Configure Assign AZs and Networks.
-        1.  Do NOT jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms )
-    3. Configure Settings 
-        1. Log retention period in days (defaults to 7)
-        2. **NATS Credentials for the OpsManager Director ** ( you can get these from the Ops Manager Director Tile > Credentials tab )
-4. Apply changes to install `Log Search`
+1. Upload the product file to your Ops Manager installation.
+1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
+1. Configure **Assign AZs and Networks**.
+	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ).</p>
+1. Configure **Settings**:
+	1. Specify the log retention period in number of days. The default is `7`.
+	1. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
+1. Click **Apply Changes**. 
 
-*Note: Log Search requires the NATS credentials for the OpsManager Director, NOT the Elastic Runtime*
+##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
 
-## Elastic Runtime and Data Service Component Logs
 
-You can configure the Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router via syslog over TCP.
+You can configure the Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
-*Note: Syslog over UDP or RELP is not supported*
+<p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
 
-1. Navigate to Log Search Tile > Status, and find the `Router` VM's IP.
-2. Update other tiles Syslog forwarder settings using above IP, port 514 and protocol TCP eg:
-    1. Update Pivotal Elastic Runtime Tile > System Logging endpoints using above IP, port 514 and protocol TCP.
-    2. Update RabbitMQ for PCF tile > Syslog using above IP, port 514.
-3. Apply Changes
+0.  In the **Log Search** tile, click **Status** and record the IP of the **Router** VM.
+0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
+	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
+	0. **External Syslog Aggregator Port**: Enter `514`. 
+	0. **External Syslog Network Protocol**: Choose `TCP`.
+0.  In the **RabbitMQ for PCF** tile, update the **Syslog** settings with the IP address from step 1 and port `514`.
+0.  For any other tiles you want to analyze with Log Search, update the Syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
+0.  Click **Apply Changes**. 
 
-## Kibana 
+## <a id="firehose"></a> Attach to the Elastic Runtime Firehose
 
-Kibana is a web application that allows you to search logs sent to Log Search, construct visualizations of searches 
-and construct dashboards from collections of visualizations.
+You can attach to the Elastic Runtime firehose to ingest application logs and platform metrics by following these steps:
 
-Kibana is available at:
+<p class="note warning">
+<strong>WARNING: </strong> The Elastic Runtime firehose sends a <strong>large</strong> amount of data, and you will probably need to scale up your cluster to handle the additional load.  Please see the <a href=./scaling.html>Scaling</a> topic for more details.
+</p>
+1. Navigate to **Log Search** tile > **Resource Config** > **Firehose** > **Syslog** and change the value from `0` to `1` instances.
 
-[https://logsearch. &lt; system_domain &gt;](#)
-
-You can find the Kibana login credentials on the Log Search > Credentials tab in Ops Manager as part of the Kibana job.
-
-Upon first access of Kibana, you will be prompted to create an index pattern.  
-
-Use:
-
-* Index name or pattern: logstash-*
-* Time-field name: @timestamp
-
-![Kibana Index pattern config screenshot](images/index-pattern-config.png) 
-
-## PCF Firehose - Application Logs and Component Metrics
-
-You can attach to the PCF Elastic Runtime’s firehose to ingest Application Logs and Platform Metrics.
-
-To enable ingesting the firehose, 
-
-1. Navigate to Log Search Tile > Resource Config > Firehose to Syslog and change from 0 to 1 instances
-
-2. Apply changes
-
-*Warning! The PCF firehose sends a ***_large_*** amount of data; and you will probably find yourself 
-having to scale up your cluster to handle the additional load.  Please see the Scaling section of this documentation for more details*
+2. Click **Apply changes**. 
