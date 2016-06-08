@@ -20,7 +20,7 @@ This document describes whether and how to scale PCF Log Search.
 1. Examine the **CPU** and **PERS DISK** usage for **Elasticsearch Data nodes**. If the load is high, especially if **CPU** > **50%** or **PERS DISK** > **70%**, follow the steps below:
   1. Identify your log volume per second by entering a search for `*` in Kibana, changing the interval to **Second**, and examining the height of the bars.
     ![volume](images/volume.png)
-  1. Scale your **Elasticsearch data nodes** and **Log parser** instances in the **Resource Config** section of the Log Search tile, following the table below as a guide. As a general rule, you should have slightly more Log parser nodes than Elasticsearch Data nodes.
+  1. Scale your **Elasticsearch data nodes** and **Log parser** instances in the **Resource Config** section of the Log Search tile, using the table below as a guide. As a general rule, you should have slightly more Log parser nodes than Elasticsearch Data nodes.
       <table>
         <tr>
           <td>Log volume</td>
