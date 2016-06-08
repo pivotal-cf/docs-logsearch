@@ -24,16 +24,17 @@ To install PCF Log Search, follow the standard procedure for installing Pivotal 
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
 1. Configure **Assign AZs and Networks**.
-	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ).</p>
+	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs in order to balance jobs between them, or you risk partial data loss. Speak to your IAAS provider if you are unsure about the network latency between your AZs.</p>
 1. Configure **Settings**:
 	1. Specify the log retention period in number of days. The default is `7`.
 	1. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
+    1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by one million for every 2GB of RAM that the queue node has. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.  
 1. Click **Apply Changes**. 
 
 ##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
 
 
-You can configure Elastic Runtime and other Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
+You can configure Elastic Runtime and other PCF Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
 <p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
 
@@ -43,7 +44,7 @@ You can configure Elastic Runtime and other Data Service tiles to send their com
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 	0. **External Syslog Network Protocol**: Choose `TCP`.
 0.  In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1 and port `514`.
-0.  For any other tiles you want to analyze with Log Search, update the syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
+0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
 
 ## <a id="firehose"></a> Attach to the Elastic Runtime Firehose
