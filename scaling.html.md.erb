@@ -17,10 +17,12 @@ This document describes whether and how to scale PCF Log Search.
 1. Navigate to the **Status** tab of the PCF Log Search tile. 
   ![Log Search Status tab](images/status-tab-logsearch.png)
 
-1. Examine the **CPU** and **PERS DISK** usage for **Elasticsearch Data nodes**. If the load is high, especially if **CPU** > **50%** or **PERS DISK** > **70%**, follow the steps below:
-  1. Identify your log volume per second by entering a search for `*` in Kibana, changing the interval to **Second**, and examining the height of the bars.
+1. Examine the **CPU** and **PERS DISK** usage for the **Elasticsearch Data nodes** job. If the load is high, especially if **CPU** > **50%** or **PERS DISK** > **70%**, follow the steps below:
+  1. Navigate to Kibana and enter a search for `*`. 
+  1. Identify your log volume per second by changing the interval to **Second** and examining the height of the bars.
     ![volume](images/volume.png)
-  1. Scale your **Elasticsearch data nodes** and **Log parser** instances in the **Resource Config** section of the Log Search tile, using the table below as a guide. As a general rule, you should have slightly more Log parser nodes than Elasticsearch Data nodes.
+  1. Navigate to the PCF Log Search tile and click **Resource Config**.
+  1. Use the table below as a guide to scale your **Elasticsearch data nodes** and **Log parser** instances. As a general rule, you should have slightly more Log parser nodes than Elasticsearch Data nodes.
       <table>
         <tr>
           <td>Log volume</td>
@@ -50,9 +52,9 @@ Pivotal Cloud Foundry (PCF) produces a large amount of logs. As a result, Log Se
 
 ### Reduce the Log Retention Period
 
-Shorter retention periods dramatically reduce the amount of disk resources required by Log Search. 
+Shorter retention periods dramatically reduce the amount of disk resources required by Log Search. Follow these steps to reduce the log retention period for Log Search:
 
-1. Navigate to the **Settings** section of the Log Search tile. 
+1. Navigate to the **Settings** section of the PCF Log Search tile. 
 1. Enter a lower value for **Log retention period**.
 
 ### Index Less Data
@@ -68,5 +70,5 @@ If you [attached Log Search to the Elastic Runtime firehose](./installing.html#f
     1. (Optional) Increase or decrease the **Size** value to see results for more or less apps.
     <img src="images/buckets.png" width="300px">
 
-  1. Click the play button to update the pie chart. Examine the chart to see if any apps produce a disproportionately high number of log entries.
-  1. Contact the developers responsible for the apps identified above and ask them to reduce the logging verbosity of their apps.
+  1. Click the play button to update the visualization. Examine the pie chart to identify any apps produce a disproportionately high number of log entries.
+  1. Contact the developers responsible for the apps identified in the previous step and ask them to reduce the logging verbosity of their apps.
