@@ -8,23 +8,13 @@ owner: London Services
 
 ### Known Issues
 
-* None
+* During a stemcell upgrade there will be 2 x ~2 min (time it takes your IaaS to create new VM) intervals where logs 
+  are NOT ingested.  This happens when the singleton Queue and Router nodes are recreated.  There is unfortunately
+  no workaround at this stage.
+  
+  ![Periods of no indexing during stemcell upgrade screenshot](images/no_ingesting_intervals_during_stemcell_update.png) 
 
 ### Notes
 
 * The Log Search tile for Pivotal Cloud Foundry (PCF) is now generally avaialable. 
-
-## <a id="latest"></a> 0.8-alpha
-**Release Date: March 2016**
-
-### Known Issues
-
-* None
-
-### Notes
-
-* Focused on operators log analysis needs
-* Support for common data services (MySQL, RabbitMQ, and Redis)
-* Latest Elastic ELK stack - E & L v2.2.0, K v4.4.0
-
 
