@@ -14,6 +14,10 @@ owner: London Services
   
   ![Periods of no indexing during stemcell upgrade screenshot](images/no_ingesting_intervals_during_stemcell_update.png) 
 
+* ValueMetrics and CounterEvents consumed from the firehose do contain the incorrect `@source` information - 
+  specifically the `@source` information is that of the consuming firehose-to-syslog VM from the PCF Log Search deployment 
+  rather than the information about the VM that generated the metric.
+  
 ### Notes
 
 * The Log Search tile for Pivotal Cloud Foundry (PCF) is now generally avaialable. 
