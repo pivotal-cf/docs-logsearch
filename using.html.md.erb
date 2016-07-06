@@ -45,38 +45,49 @@ The following list describes what you can do with the Kibana component of PCF Lo
 
 For more information, view the [Kibana documentation](https://www.elastic.co/guide/en/kibana/current/index.html).
 
-###<a id="tags"></a> Forwarding UAA data to Splunk
+##<a id="splunk"></a> Forward Data to Splunk
 
-A common requirement is to forward log data to a central auditing system. PCF Log Search can forward some or all the data it recieves to an external service like Splunk as JSON.
+You can configure PCF Log Search to forward some or all the data it receives to an external service such as Splunk in JSON format.
 
-#### Configure Splunk
-* <p class="note"><strong>Note</strong>: UDP is strongly encouraged to prevent network communication problems with the Splunk Network input prevent data being indexed by Log Search </p>
-* Documentation for configuring a network input is available at http://docs.splunk.com/Documentation/Splunk/latest/Data/Monitornetworkports
-	* When prompted, select `_json` as the Source Type
+### Step 1: Configure Splunk
 
-#### Configure Log Search
-* Configure Experimental > Custom Logstash outputs with the Splunk UDP network input configured above.
-* A conditional statement can be used to filter the data sent to Splunk
-	* eg: `if [@source][program] == "uaa" {`
-* Example Configuration
+<p class="note"><strong>Note</strong>: Pivotal recommends using UDP to avoid network communication problems with the Splunk Network input that prevent data from being indexed by Log Search </p>
 
-		if [@source][program] == "uaa" {
-		  udp {
-		    host => "splunk-ip-or-dns"
-		    port => "splunk-udp-port-number"
-		 }
-		}
+Follow the instructions for configuring a network input in the [Get data from TCP and UDP ports] (http://docs.splunk.com/Documentation/Splunk/latest/Data/Monitornetworkports) topic of the Splunk documentation. When prompted, choose `_json` as the **Source Type**.
 
-#### Network Configuration
-* Data will be sent via UDP from the Log Search Log parser VMs to the Splunk Network input on the configured port.
-* Firewall rules must allow:
-   * Outgoing traffic from the Log Search Log parser VMs on the configured port
-   * Incoming traffic to the Splunk installation on the configured port.
+### Step 2: Configure Log Search
+
+1. From Ops Manager, click on the **Log Search** tile, and then the **Experimental** section. 
+
+1. For **Custom Logstash Outputs**, enter the Splunk UDP network input that you configured in the previous step. See the following example configuration:
+
+
+	```
+	if [@source][program] == "uaa" {
+	  udp {
+	    host => "SPLUNK-IP-OR-DNS"
+	    port => "SPLUNK-UDP-PORT-NUMBER"
+	 }
+	}
+	```
+
+	You can add a conditional statement to filter the data sent to Splunk, such as `if [@source][program] == "uaa" {` in the example above. 
+
+### Step 3: Configure Firewall Rules
+
+To send data from the Log Search to Splunk using UDP on the port you specified in Step 1, configure your firewall to allow:
+
+   * Outgoing traffic from the Log Search Log parser VMs on the configured port. You can view the IP addresses for the Log Parser VMs in Ops Manager under the **Status** tab of the Log Search tile.
+   * Incoming traffic to the Splunk installation on the configured port
    
-#### Checking that forwarding is working
+### Step 4: Verify Your Forwarding Configuration
 
-Once your have configured forwarding successfully, the data will be available in both Log Search and Splunk.
+Check that your data appears in both Log Search and Splunk:
 
-![UAA log in Log Search > Kibana screenshot](images/UAA-log-data-in-Kibana.png) 
+1. Using the example configuration from Step 2, search for `@source.program:uaa` in Kibana. 
 
-![UAA log in Splunk screenshot](images/UAA-log-data-in-Splunk.png) 
+	![UAA log in Log Search > Kibana screenshot](images/UAA-log-data-in-Kibana.png) 
+
+1. Using the example configuration from Step 2, search for `source="Pivotal LogSearch UAA" sourcetype="_json"` in Splunk.
+
+	![UAA log in Splunk screenshot](images/UAA-log-data-in-Splunk.png) 
