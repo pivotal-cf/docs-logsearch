@@ -51,7 +51,7 @@ You can configure PCF Log Search to forward some or all the data it receives to 
 
 ### Step 1: Configure Splunk
 
-<p class="note"><strong>Note</strong>: Pivotal recommends using UDP to avoid network communication problems with the Splunk Network input that prevent data from being indexed by Log Search </p>
+<p class="note"><strong>Note</strong>: Pivotal recommends using UDP to avoid network communication problems with the Splunk Network input preventing data being indexed by Log Search </p>
 
 Follow the instructions for configuring a network input in the [Get data from TCP and UDP ports] (http://docs.splunk.com/Documentation/Splunk/latest/Data/Monitornetworkports) topic of the Splunk documentation. When prompted, choose `_json` as the **Source Type**.
 
@@ -88,6 +88,6 @@ Check that your data appears in both Log Search and Splunk:
 
 	![UAA log in Log Search > Kibana screenshot](images/UAA-log-data-in-Kibana.png) 
 
-1. Using the example configuration from Step 2, search for `source="Pivotal LogSearch UAA" sourcetype="_json"` in Splunk.
+1. Using the example configuration from Step 2, search for `sourcetype="_json"` in Splunk.
 
 	![UAA log in Splunk screenshot](images/UAA-log-data-in-Splunk.png) 
