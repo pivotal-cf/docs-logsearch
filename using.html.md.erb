@@ -57,9 +57,9 @@ Follow the instructions for configuring a network input in the [Get data from TC
 
 ### Step 2: Configure Log Search
 
-1. From Ops Manager, click on the **Log Search** tile, and then the **Experimental Features** section. 
+1. From Ops Manager, click on the **Log Search** tile, and then the **Experimental** section. 
 
-1. For **Custom Logstash outputs**, enter the Splunk UDP network input that you configured in the previous step. See the following example configuration:
+1. For **Custom Logstash Outputs**, enter the Splunk UDP network input that you configured in the previous step. See the following example configuration:
 
 
 	```
@@ -75,9 +75,9 @@ Follow the instructions for configuring a network input in the [Get data from TC
 
 ### Step 3: Configure Firewall Rules
 
-To send data from the Log Search Log parser VMs to the Splunk Network input using UDP on the port you specified in Step 1, configure your firewall to allow:
+To send data from the Log Search to Splunk using UDP on the port you specified in Step 1, configure your firewall to allow:
 
-   * Outgoing traffic from the Log Search Log parser VMs on the configured port
+   * Outgoing traffic from the Log Search Log parser VMs on the configured port. You can view the IP addresses for the Log Parser VMs in Ops Manager under the **Status** tab of the Log Search tile.
    * Incoming traffic to the Splunk installation on the configured port
    
 ### Step 4: Verify Your Forwarding Configuration
