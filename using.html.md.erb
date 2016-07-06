@@ -44,3 +44,39 @@ The following list describes what you can do with the Kibana component of PCF Lo
 * [Create a Dashboard](https://www.elastic.co/guide/en/kibana/current/dashboard.html): You can create a dashboard to display multiple visualizations and saved searches. You can also apply filters to your dashboard, which affects all the displayed panes. For instance, using the time filter applies your time changes to every displayed visualization and saved search. 
 
 For more information, view the [Kibana documentation](https://www.elastic.co/guide/en/kibana/current/index.html).
+
+###<a id="tags"></a> Forwarding UAA data to Splunk
+
+A common requirement is to forward log data to a central auditing system. PCF Log Search can forward some or all the data it recieves to an external service like Splunk as JSON.
+
+#### Configure Splunk
+* <p class="note"><strong>Note</strong>: UDP is strongly encouraged to prevent network communication problems with the Splunk Network input prevent data being indexed by Log Search </p>
+* Documentation for configuring a network input is available at http://docs.splunk.com/Documentation/Splunk/latest/Data/Monitornetworkports
+	* When prompted, select `_json` as the Source Type
+
+#### Configure Log Search
+* Configure Experimental > Custom Logstash outputs with the Splunk UDP network input configured above.
+* A conditional statement can be used to filter the data sent to Splunk
+	* eg: `if [@source][program] == "uaa" {`
+* Example Configuration
+
+		if [@source][program] == "uaa" {
+		  udp {
+		    host => "splunk-ip-or-dns"
+		    port => "splunk-udp-port-number"
+		 }
+		}
+
+#### Network Configuration
+* Data will be sent via UDP from the Log Search Log parser VMs to the Splunk Network input on the configured port.
+* Firewall rules must allow:
+   * Outgoing traffic from the Log Search Log parser VMs on the configured port
+   * Incoming traffic to the Splunk installation on the configured port.
+   
+#### Checking that forwarding is working
+
+Once your have configured forwarding successfully, the data will be available in both Log Search and Splunk.
+
+![UAA log in Log Search > Kibana screenshot](images/UAA-log-data-in-Kibana.png) 
+
+![UAA log in Splunk screenshot](images/UAA-log-data-in-Splunk.png) 
