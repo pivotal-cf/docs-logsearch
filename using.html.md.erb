@@ -15,7 +15,7 @@ This topic describes how to get started with Kibana, the front-end component of 
 
 	![Credentials](creds.png)
 
-1. Navigate to `https://logsearch.YOUR-SYSTEM-DOMAIN` and log in to Kibana using the credentials. 
+1. Navigate to `https://logsearch.YOUR-SYSTEM-DOMAIN.example.com` and log in to Kibana using the credentials. 
 
 1. (First time only) When prompted to configure an index pattern, enter `logstash-*` for the **Index name or pattern** and `@timestamp` for the **Time-field name**. 
 
@@ -37,7 +37,7 @@ The following list describes what you can do with the Kibana component of PCF Lo
 
 * Change the [Time Scale](https://www.elastic.co/guide/en/kibana/current/discover.html#set-time-filter) and [Refresh Interval](https://www.elastic.co/guide/en/kibana/current/discover.html#auto-refresh): By default, the time scale is set to the last **15 minutes**. 
 
-* [Search Log Data](https://www.elastic.co/guide/en/kibana/current/discover.html#search): You can further refine your results from any filter or time span using the search bar at the top of the **Discover** page. You can also search against any field by typing your query in the following format: `FIELD:VALUE`. For example: `@source.ip:10.0.16.21`.
+* [Search Log Data](https://www.elastic.co/guide/en/kibana/current/discover.html#search): You can further refine your results from any filter or time span using the search bar at the top of the **Discover** page. You can also search against any field by typing your query in the following format: `FIELD:VALUE`. For example: `@source.ip:192.0.2.21`.
 
 * [Design Data Visualizations](https://www.elastic.co/guide/en/kibana/current/visualize.html): You can create visualizations such as **Data Table**, **Line Chart**, and **Vertical Bar Chart**. You can also [customize your visualizations](https://www.elastic.co/guide/en/kibana/current/visualize.html#aggregation-builder). For example, you can tailor the x and y axis of a Vertical Bar Chart using bucket aggregations and metric aggregations. 
 
