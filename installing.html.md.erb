@@ -14,21 +14,21 @@ owner: London Services
     }
 </style>
 
-This document describes how to install and configure Pivotal Cloud Foundry (PCF) Log Search.
+This document describes how to install and configure Pivotal Cloud Foundry&reg; (PCF) Log Search.
 
-## <a id="install"></a>Install via Ops Manager
+## <a id="install"></a>Install from Ops Manager
 
-To install PCF Log Search, follow the standard procedure for installing Pivotal Ops Manager tiles:
+To install PCF Log Search, follow the standard procedure below for installing Pivotal Ops Manager tiles:
 
 1. Download the product file from the [PCF Metrics section of Pivotal Network](https://network.pivotal.io/products/pcf-metrics#/releases/1832).
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
 1. Configure **Assign AZs and Networks**.
-	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs in order to balance jobs between them, or you risk partial data loss. Speak to your IAAS provider if you are unsure about the network latency between your AZs.</p>
+	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs to balance jobs between them, or you risk partial data loss. Contact your IAAS provider if you are unsure about the network latency between your AZs.</p>
 1. Configure **Settings**:
 	1. Specify the log retention period in number of days. The default is `7`.
-	1. Specify the NATS Credentials for the OpsManager Director, viewable from the Ops Manager Director tile under the **Credentials** tab.
-    1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by one million for every 2GB of RAM that the queue node has. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.  
+	1. Specify the NATS Credentials for the Ops Manager Director, which you can find under the **Credentials** tab on the Ops Manager Director tile.
+    1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by 1,000,000 for every 2GB of RAM in the queue node. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.  
 1. Click **Apply Changes**. 
 
 ##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
@@ -38,22 +38,22 @@ You can configure Elastic Runtime and other PCF Data Service tiles to send their
 
 <p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
 
-0.  In the **Log Search** tile, click **Status** and record the IP of the **Router** VM.
+0.  In the **Log Search** tile, click **Status** and record the IP address of the **Router** VM.
 0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1. 
 	0. **External Syslog Aggregator Port**: Enter `514`. 
 	0. **External Syslog Network Protocol**: Choose `TCP`.
-0.  In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1 and port `514`.
-0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP from step 1, port `514`, and protocol `TCP`.
+0.  In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1, protocol `TCP`, and port `514`.
+0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP address from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**. 
 
 ## <a id="firehose"></a> Attach to the Elastic Runtime Firehose
 
-You can attach to the Elastic Runtime firehose to ingest application logs and platform metrics by following these steps:
+To ingest application logs and platform metrics, follow the steps below to attach PCF Log Search to the Elastic Runtime firehose:
 
 <p class="note warning">
-<strong>WARNING: </strong> The Elastic Runtime firehose sends a large amount of data, and you will probably need to scale up your cluster to handle the additional load.  See the <a href=./scaling.html>Scaling</a> topic for details.
+<strong>WARNING: </strong> The Elastic Runtime firehose sends a large amount of data, and you might need to scale up your cluster to handle the additional load.  See the <a href=./scaling.html>Scaling</a> topic for details.
 </p>
-1. Navigate to the **Resource Config** section of the **Log Search** tile and change the value for **Firehose to Syslog** from `0` to `1` instance.
+1. On the **Log Search** tile in Ops Manager, click **Resource Config** and change the value for **Firehose to Syslog** from `0` to `1` instance.
 
 2. Click **Apply Changes**. 
