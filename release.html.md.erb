@@ -17,7 +17,16 @@ owner: London Services
 * ValueMetrics and CounterEvents consumed from the firehose do contain the incorrect `@source` information - 
   specifically the `@source` information is that of the consuming firehose-to-syslog VM from the PCF Log Search deployment 
   rather than the information about the VM that generated the metric.
+
+* Disabling the "Enable Shard Allocation" errand and applying changes that affect Elasticsearch nodes will prevent new daily indexes 
+  from being created.  When updating stemcells it is tempting to disable the "Enable Shard Allocation" errand to speed up the deployment.
+  Unfortunately doing this will leave Elasticsearch in a "broken" state; specifically it will be unable to create new daily indexes
+  at midnight UTC.
   
+  If you suspect this has happened; check whether the your cluster's `cluster.routing.allocation.enable` setting has been set to something
+  other than `all` by querying: `http://logsearch.<system_domain>/elasticsearch/_cluster/settings?pretty`.  If it has, you can correct this
+  by re-enabling the errand in Ops Manager via the Log Search > Errand screen, and Applying Changes.
+    
 ### Notes
 
 * The Log Search tile for Pivotal Cloud Foundry (PCF) is now generally avaialable. 
