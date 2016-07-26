@@ -1,30 +1,30 @@
 ---
-title: Scaling Pivotal Cloud Foundry&reg; Log Search
+title: Scaling Pivotal Cloud Foundry Log Search
 owner: London Services
 ---
 
-This topic describes when and how to scale Pivotal Cloud Foundry&reg; (PCF) Log Search.
+This topic describes when and how to scale Pivotal Cloud Foundry (PCF) Log Search.
 
 <strong>Prerequisite</strong>: The procedures in this topic assume that you are logged into Kibana. For more information, see [Log in to Kibana](./using.html#login).
 
 ## <a id="need"></a>Determine if You Need to Scale
 
-Follow the steps below to view a histogram for your recent logs and identify if all logs are being indexed. 
+Follow the steps below to view a histogram for your recent logs and identify if all logs are being indexed.
 
-1. Enter `*` in the Kibana search bar to search for all logs. 
+1. Enter `*` in the Kibana search bar to search for all logs.
 
-1. Examine the histogram for a gap in recent logs as shown in the image below. A gap means that Log Search cannot keep up with indexing the incoming data. To address this issue, you can [scale up your cluster](#scale-up) to handle the load, [reduce resource usage](#resource-usage), or both. 
+1. Examine the histogram for a gap in recent logs as shown in the image below. A gap means that Log Search cannot keep up with indexing the incoming data. To address this issue, you can [scale up your cluster](#scale-up) to handle the load, [reduce resource usage](#resource-usage), or both.
   ![Falling behind on log indexing](images/falling-behind-on-log-indexing.png)
 
 ## <a id="scale-up"></a>Scale Up Your Cluster
 
-Follow these steps to scale up your PCF Log Search cluster to handle more incoming data. 
+Follow these steps to scale up your PCF Log Search cluster to handle more incoming data.
 
-1. On the **Log Search** tile in Ops Manager, click the **Status** tab. 
+1. On the **Log Search** tile in Ops Manager, click the **Status** tab.
   ![Log Search Status tab](images/status-tab-logsearch.png)
 
 1. Examine the **CPU** and **PERS DISK** usage for the **Elasticsearch Data nodes** job. If the load is high, especially if **CPU** > **50%** or **PERS DISK** > **70%**, follow the steps below:
-  1. In Kibana, enter a search for `*`. 
+  1. In Kibana, enter a search for `*`.
   1. Identify the log volume per second by changing the interval to **Second** and examining the height of the bars.
     ![volume](images/volume.png)
   1. Navigate to the PCF Log Search tile and click **Resource Config**.
@@ -62,7 +62,7 @@ Pivotal Cloud Foundry (PCF) produces a large volume of logs. As a result, Log Se
 
 Shorter retention periods dramatically reduce the amount of disk resources required by Log Search. Follow these steps to reduce the log retention period for Log Search:
 
-1. Navigate to the **Settings** section of the PCF Log Search tile. 
+1. Navigate to the **Settings** section of the PCF Log Search tile.
 1. Enter a lower value for **Log retention period**.
 1. Click **Save** and **Apply Changes**.
 
@@ -70,15 +70,15 @@ Shorter retention periods dramatically reduce the amount of disk resources requi
 
 If you [attached Log Search to the Elastic Runtime firehose](./installing.html#firehose), application logs can make up a large portion of the total logs indexed. Follow these steps to index less data:
 
-  1. In Kibana, navigate to the **Visualize** tab. 
-  1. Select **Pie Chart**, and then **From a new search**. 
-  1. Search for `tags:LogMessage`. 
-  1. In the **buckets** section, select **Split Chart**: 
-    1. For **Aggregation**, choose **Terms**. 
+  1. In Kibana, navigate to the **Visualize** tab.
+  1. Select **Pie Chart**, and then **From a new search**.
+  1. Search for `tags:LogMessage`.
+  1. In the **buckets** section, select **Split Chart**:
+    1. For **Aggregation**, choose **Terms**.
     1. For **Field**, choose **cf.app_id**.
     1. (Optional) Increase or decrease the **Size** value to see results for more or fewer apps.
     <img src="images/buckets.png" width="300px">
 
-  1. Click the play button to update the visualization. 
+  1. Click the play button to update the visualization.
   1. Examine the pie chart to identify apps that produce a disproportionately high number of log entries.
   1. Contact the developers of those apps and ask them to reduce the logging verbosity.
