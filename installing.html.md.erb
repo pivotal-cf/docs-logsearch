@@ -24,9 +24,9 @@ To install PCF Log Search, follow the standard procedure below for installing Pi
 1. Upload the product file to your Ops Manager installation.
 1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
 1. Configure **Assign AZs and Networks**.
-	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs to balance jobs between them, or you risk partial data loss. Contact your IAAS provider if you are unsure about the network latency between your AZs.</p>
+	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs to balance jobs between them or you risk partial data loss. Contact your IAAS provider if you are unsure about the network latency between your AZs.</p>
 1. Configure **Settings**:
-	1. Specify the log retention period in number of days. The default is `7`, the minimum is 1, and the maximum is 15. 
+	1. Specify the log retention period in number of days. The default is `7`, the minimum is `1`, and the maximum is `15`. 
 	1. Specify the NATS Credentials for the Ops Manager Director, which you can find under the **Credentials** tab on the Ops Manager Director tile.
     1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by 1,000,000 for every 2GB of RAM in the queue node. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.
 1. Click **Apply Changes**.
