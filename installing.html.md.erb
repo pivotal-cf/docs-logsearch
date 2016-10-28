@@ -60,6 +60,15 @@ You can configure Log Search to also consume application logs and metrics
 the additional load.  See the <a href=./scaling.html>Scaling</a> topic for details.
 </p>
 
-1. On the **Log Search** tile in Ops Manager, click **Experimental - Firehose** and check the additional firehose event types you want to consume.
+You can discover the rate of messages coming from the Elastic Runtime Firehose using the `cf cli` `nozzle plugin` 
+to consume messages from the firehose - see https://docs.cloudfoundry.org/loggregator/cli-plugin.html
 
+Combining that with `pv` gives a way to get a rough estimate of the volume of LogMessages in the firehose:
+
+```
+$ cf nozzle -filter LogMessage | pv -l -i10 -r >/dev/null # Outputs LogMessages / second every 10 seconds.
+[50.5 /s]
+```
+
+1. On the **Log Search** tile in Ops Manager, click **Experimental - Firehose** and check the additional firehose event types you want to consume.
 2. Click **Apply Changes**.
