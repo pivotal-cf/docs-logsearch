@@ -22,6 +22,7 @@ owner: Metrix
 
 * ENHANCEMENT: Updates all components to latest minor versions
 * ENHANCEMENT: Uses a lower priviledge `logsearch-firehose` user to access the Elastic Runtime Firehose
+    * This change to the firehose user raises the minimum Elastic Runtime version requirement to 1.7.16 or later
 * ENHANCEMENT: Ingests platform metrics by default from the Elastic Runtime Firehose.  Can be configured to also
   ingest application logs and metrics.  See [Installing PCF Log Search > Consume application logs 
   from the Elastic Runtime Firehose](installing.html#firehose)
@@ -30,7 +31,7 @@ owner: Metrix
 * BUGFIX: Allow running with multiple ingestor VMs
 * BUGFIX: ValueMetrics and CounterEvents consumed from the firehose contain the correct `@source` information
 
-## <a id="latest"></a> 1.0.1
+## <a id="1.0.1"></a> 1.0.1
 **Release Date: October 07, 2016**
 
 ### Known Issues
