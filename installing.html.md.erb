@@ -47,28 +47,26 @@ You can configure Elastic Runtime and other PCF Data Service tiles to send their
 0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP address from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**.
 
-## <a id="firehose"></a> Consume application logs from the Elastic Runtime Firehose
+## <a id="firehose"></a> Consume App Logs from the Elastic Runtime Firehose
 
-By default Log Search attaches to the Elastic Runtime firehose and consumes platform metrics 
-( specifically the ValueMetric, CounterEvent and Error types).
+By default, Log Search attaches to the Elastic Runtime Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. If you want to to analyze app logs and metrics, you can configure Log Search to consume those as well, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
 
-You can configure Log Search to also consume application logs and metrics 
-( specifically the ContainerMetric, LogMessage, HttpStartStop types ), should you as an operator wish to analyse these.
+### Find the Rate of Incoming Messages
+You can discover the rate of messages coming from the Elastic Runtime Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
+
+Run following command to get a rough estimate of the volume of `LogMessages` coming from the Firehose. The command outputs the amount of `LogMessages` per second every 10 seconds.
+
+<pre class="terminal">
+$ cf nozzle -filter LogMessage | pv -l -i10 -r >/dev/null
+[50.5 /s]
+</pre>
+
+### Configure Log Search to Receive App Logs
 
 <p class="note warning">
 <strong>WARNING: </strong> Some applications send a large amount of application logs over the firehose, so you might need to scale up your cluster to handle 
 the additional load.  See the <a href=./scaling.html>Scaling</a> topic for details.
 </p>
 
-You can discover the rate of messages coming from the Elastic Runtime Firehose using the `cf cli` `nozzle plugin` 
-to consume messages from the firehose - see https://docs.cloudfoundry.org/loggregator/cli-plugin.html
-
-Combining that with `pv` gives a way to get a rough estimate of the volume of LogMessages in the firehose:
-
-```
-$ cf nozzle -filter LogMessage | pv -l -i10 -r >/dev/null # Outputs LogMessages / second every 10 seconds.
-[50.5 /s]
-```
-
-1. On the **Log Search** tile in Ops Manager, click **Experimental - Firehose** and check the additional firehose event types you want to consume.
+1. In the **Log Search** tile in Ops Manager, click **Experimental - Firehose** and check the additional Firehose event types you want to consume.
 2. Click **Apply Changes**.
