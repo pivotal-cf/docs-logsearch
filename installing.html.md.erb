@@ -49,7 +49,7 @@ You can configure Elastic Runtime and other PCF Data Service tiles to send their
 
 ## <a id="firehose"></a> Consume App Logs from the Elastic Runtime Firehose
 
-By default, Log Search attaches to the Elastic Runtime Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. If you want to to analyze app logs and metrics, you can configure Log Search to consume those as well, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
+By default, Log Search attaches to the Elastic Runtime Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. You can also configure Log Search to consume app logs and metrics, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
 
 ### Find the Rate of Incoming Messages
 You can discover the rate of messages coming from the Elastic Runtime Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
