@@ -3,8 +3,37 @@ title: Release Notes
 owner: Metrix
 ---
 
+## <a id="latest"></a> 1.0.2
+**Release Date: November 14, 2016**
 
-## <a id="latest"></a> 1.0.1
+### Notes
+
+#### Enhancements
+
+* Updates all components to latest minor versions.
+* Uses a lower privilege `logsearch-firehose` user to access the Elastic Runtime Firehose.
+    <p class="note"><strong>Note</strong>: This change to the firehose user raises the minimum Elastic Runtime version requirement to 1.7.16 or later</p>
+* Ingests platform metrics by default from the Elastic Runtime Firehose. You can also configure Log Search to ingest application logs and metrics.  See the [Consume App Logs from the Elastic Runtime Firehose](installing.html#firehose) section of the install topic. 
+* Labels `Enable shard allocation` errand as required
+
+#### Bug Fixes
+* Prevents running with more than 1 Elasticsearch master VM.
+* Allows running with multiple ingestor VMs.
+* `ValueMetrics` and `CounterEvents` consumed from the Firehose contain the correct `@source` information.
+
+### Known Issues
+
+* During a stemcell upgrade there will be 2 x ~2 min (time it takes your IaaS to create new VM) intervals where logs 
+  are NOT ingested.  This happens when the singleton Queue and Router nodes are recreated.  There is unfortunately
+  no workaround at this stage.
+  
+    ![Periods of no indexing during stemcell upgrade screenshot](images/no_ingesting_intervals_during_stemcell_update.png) 
+
+* Disabling the "Enable Shard Allocation" errand and applying changes that affect Elasticsearch nodes will prevent new daily indexes from being created.  When updating stemcells it is tempting to disable the "Enable Shard Allocation" errand to speed up the deployment. Unfortunately doing this will leave Elasticsearch in a "broken" state; specifically it will be unable to create new daily indexes at midnight UTC.
+  <br><br>
+  If you suspect this has happened; check whether the your cluster's `cluster.routing.allocation.enable` setting has been set to something other than `all` by querying: `http://logsearch.<system_domain>/elasticsearch/_cluster/settings?pretty`.  If it has, you can correct this by re-enabling the errand in Ops Manager via the Log Search > Errand screen, and Applying Changes.
+
+## <a id="1.0.1"></a> 1.0.1
 **Release Date: October 07, 2016**
 
 ### Known Issues
@@ -26,7 +55,7 @@ owner: Metrix
   
   ![Periods of no indexing during stemcell upgrade screenshot](images/no_ingesting_intervals_during_stemcell_update.png) 
 
-* ValueMetrics and CounterEvents consumed from the firehose do contain the incorrect `@source` information - 
+* (Fixed in v1.0.2) ValueMetrics and CounterEvents consumed from the firehose do contain the incorrect `@source` information - 
   specifically the `@source` information is that of the consuming firehose-to-syslog VM from the PCF Log Search deployment 
   rather than the information about the VM that generated the metric.
 
