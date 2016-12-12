@@ -1,0 +1,71 @@
+---
+title: Troubleshooting Log Search
+owner: PCF Metrics
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how to resolve common issues with Log Search for Pivotal Cloud Foundry (PCF) tile. 
+ 
+## <a id='general'></a>General Troubleshooting
+<p>Before attempting to troubleshoot Log Search, confirm the following</p>
+
+### <a id='enable_shard_allocation'></a> The Enable Shard Allocation errand must be enabled
+  
+* Disabling the **Enable Shard Allocation** errand and applying changes that affect 
+Elasticsearch nodes will prevent new daily indexes from being created. 
+When updating stemcells it is tempting to disable the “Enable Shard Allocation” 
+errand to speed up the deployment. Unfortunately doing this will leave Elasticsearch
+in a “broken” state; specifically it will be unable to create new daily indexes at midnight UTC.
+   
+* If you suspect this has happened; check whether your cluster’s
+ `cluster.routing.allocation.enable` setting has been set to something other than **all** by
+ querying:
+
+      `http://logsearch.<system_domain>/elasticsearch/_cluster/settings?pretty`<br/>
+ If it has, you can correct this by re-enabling the errand in Ops Manager via 
+ the `Log Search > Errand` screen, and **Apply Changes**.
+
+
+### <a id='installation_steps'></a>Important Installation Steps
+* Log Search (v1.0.2 and later) requires two important installation steps to occur to receive all logs/metrics expected 
+  * Ensure NATS credentials from the **Ops Manager** tile were [entered](https://docs.pivotal.io/logsearch/installing.html#install) in Log Search tile. 
+  * Ensure **System Logging** was properly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
+  
+       
+### <a id='cluster_health'></a>Review current cluster health
+* Log Search includes a visualization of current cluster health. 
+It is accessible at `logsearch_monitor.<SystemDomain>`
+
+* Clusters that are in a **red** state are broken
+  * The best way to troubleshoot the cluster health is to look at the logs for **Elasticsearch Master** and 
+    **Elasticsearch Data nodes**. This is found in `Log Search > Status > Logs`
+    
+* Clusters that are in a **yellow** state are not replicating.
+  * Verify there are multiple data nodes. If there are multiple data nodes in a **yellow** state, look at
+  the logs for **Elasticsearch Master** and **Elasticsearch Data nodes**. This is found in 
+  `Log Search > Status > Logs`
+  * If there is only a single data node, scale up the number of **Elasticsearch Data nodes** in 
+  `Log Search > Resource Config`
+    
+    
+### <a id='data_nodes_at_maximum'></a>Elastic Search data nodes consistently run at maximum 
+* This issue is most commonly caused by a Redis queuing issue, and will often be evident in product logs 
+  * Example log message: 
+  
+      `Redis key size has hit a congestion threshold 1000000 suspending output for 10 seconds`
+  
+1. Restart the ingestor and wait a few minutes.
+1. If the cluster health continues to be unhealthy, scale up the size of the clusters. 
+  * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
+
+
+### <a id='parser_at_maximum'></a>Parser VMs are consistently run at maximum CPU
+* As a general rule, use more Log parser nodes than Elasticsearch Data nodes. 
+* Scale up parser nodes until the average CPU goes down.
+  * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
+
+
+### <a id='elasticsearch_master'></a> Multiple Elastic Search Master VMs (v1.0.1 and prior)
+* Ensure there is only one Elastic Search Master VM. The product cannot support running with more than one 
+Elastic Search master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
