@@ -5,12 +5,12 @@ owner: PCF Metrics
 
 <strong><%= modified_date %></strong>
 
-This topic describes how to resolve common issues with Log Search for Pivotal Cloud Foundry (PCF) tile. 
+This topic describes how to resolve common issues with the Log Search for Pivotal Cloud Foundry (PCF) tile. 
  
 ## <a id='general'></a>General Troubleshooting
-<p>Before attempting to troubleshoot Log Search, confirm the following</p>
+<p>If not all logs expected are being received and displayed in the Log Search Kibana UI, the following items should be validated as part of the troubleshooting process.</p>
 
-### <a id='enable_shard_allocation'></a> The Enable Shard Allocation errand must be enabled
+### <a id='enable_shard_allocation'></a> Ensure the required Enable Shard Allocation errand is enabled
   
 * Disabling the **Enable Shard Allocation** errand and applying changes that affect 
 Elasticsearch nodes will prevent new daily indexes from being created. 
@@ -27,13 +27,13 @@ in a “broken” state; specifically it will be unable to create new daily inde
  the `Log Search > Errand` screen, and **Apply Changes**.
 
 
-### <a id='installation_steps'></a>Important Installation Steps
-* Log Search (v1.0.2 and later) requires two important installation steps to occur to receive all logs/metrics expected 
+### <a id='installation_steps'></a>Ensure the perscribed installation steps were followed
+* Log Search (v1.0.2 and later) requires two important installation steps in order to receive all logs/metrics expected 
   * Ensure NATS credentials from the **Ops Manager** tile were [entered](https://docs.pivotal.io/logsearch/installing.html#install) in Log Search tile. 
   * Ensure **System Logging** was properly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
   
        
-### <a id='cluster_health'></a>Review current cluster health
+### <a id='cluster_health'></a>Review the current cluster health
 * Log Search includes a visualization of current cluster health. 
 It is accessible at `logsearch_monitor.<SystemDomain>`
 
@@ -49,7 +49,7 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   `Log Search > Resource Config`
     
     
-### <a id='data_nodes_at_maximum'></a>Elastic Search data nodes consistently run at maximum 
+### <a id='data_nodes_at_maximum'></a>If Elastic Search data nodes are consistently running at maximum 
 * This issue is most commonly caused by a Redis queuing issue, and will often be evident in product logs 
   * Example log message: 
   
@@ -60,12 +60,12 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
 
 
-### <a id='parser_at_maximum'></a>Parser VMs are consistently run at maximum CPU
+### <a id='parser_at_maximum'></a>If Parser VMs are consistently running at maximum CPU
 * As a general rule, use more Log parser nodes than Elasticsearch Data nodes. 
 * Scale up parser nodes until the average CPU goes down.
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
 
 
-### <a id='elasticsearch_master'></a> Multiple Elastic Search Master VMs (v1.0.1 and prior)
+### <a id='elasticsearch_master'></a>If multiple Elastic Search Master VMs (v1.0.1 and prior)
 * Ensure there is only one Elastic Search Master VM. The product cannot support running with more than one 
 Elastic Search master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
