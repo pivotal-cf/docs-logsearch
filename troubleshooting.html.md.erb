@@ -8,17 +8,18 @@ owner: PCF Metrics
 This topic describes how to resolve common issues with the Log Search for Pivotal Cloud Foundry (PCF) tile. 
  
 ## <a id='general'></a>General Troubleshooting
-<p>If not all logs expected are being received and displayed in the Log Search Kibana UI, the following items should be validated as part of the troubleshooting process.</p>
+<p>If not all logs expected are being received and displayed in the Log Search Kibana UI, 
+the following items should be validated as part of the troubleshooting process.</p>
 
 ### <a id='enable_shard_allocation'></a> Ensure the required Enable Shard Allocation errand is enabled
   
 * Disabling the **Enable Shard Allocation** errand and applying changes that affect 
-Elasticsearch nodes will prevent new daily indexes from being created. 
+Elasticsearch nodes prevents new daily indexes from being created. 
 When updating stemcells it is tempting to disable the “Enable Shard Allocation” 
-errand to speed up the deployment. Unfortunately doing this will leave Elasticsearch
-in a “broken” state; specifically it will be unable to create new daily indexes at midnight UTC.
+errand to speed up the deployment. Unfortunately doing this leaves Elasticsearch
+in a “broken” state; specifically it is unable to create new daily indexes at midnight UTC.
    
-* If you suspect this has happened; check whether your cluster’s
+* If you suspect this has happened; check whether your cluster
  `cluster.routing.allocation.enable` setting has been set to something other than **all** by
  querying:
 
@@ -27,10 +28,10 @@ in a “broken” state; specifically it will be unable to create new daily inde
  the `Log Search > Errand` screen, and **Apply Changes**.
 
 
-### <a id='installation_steps'></a>Ensure the perscribed installation steps were followed
+### <a id='installation_steps'></a>Ensure the prescribed installation steps were followed
 * Log Search (v1.0.2 and later) requires two important installation steps in order to receive all logs/metrics expected 
   * Ensure NATS credentials from the **Ops Manager** tile were [entered](https://docs.pivotal.io/logsearch/installing.html#install) in Log Search tile. 
-  * Ensure **System Logging** was properly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
+  * Ensure **System Logging** was correctly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
   
        
 ### <a id='cluster_health'></a>Review the current cluster health
@@ -50,7 +51,7 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
     
     
 ### <a id='data_nodes_at_maximum'></a>If Elastic Search data nodes are consistently running at maximum 
-* This issue is most commonly caused by a Redis queuing issue, and will often be evident in product logs 
+* This issue is most commonly caused by a Redis queuing issue, and is often evident in product logs 
   * Example log message: 
   
       `Redis key size has hit a congestion threshold 1000000 suspending output for 10 seconds`
@@ -66,6 +67,6 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
 
 
-### <a id='elasticsearch_master'></a>If multiple Elastic Search Master VMs (v1.0.1 and prior)
+### <a id='elasticsearch_master'></a>If multiple Elastic Search Master VMs (v1.0.1 and earlier)
 * Ensure there is only one Elastic Search Master VM. The product cannot support running with more than one 
 Elastic Search master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
