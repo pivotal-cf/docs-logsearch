@@ -58,6 +58,7 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
 1. Restart the ingestor and wait a few minutes.
 1. If the cluster health continues to be unhealthy, scale up the size of the clusters. 
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
+  * Example: If the Elastic Search data nodes are running near maximum on persistent disk, consider increasing the persistent disk or instance count to add more capacity.
 
 
 ## <a id='parser_at_maximum'></a>If Parser VMs are consistently running at maximum CPU
