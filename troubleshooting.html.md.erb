@@ -33,6 +33,11 @@ in a “broken” state; specifically it is unable to create new daily indexes a
   * Ensure **System Logging** was correctly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
   
        
+## <a id='resource_scale'></a>Ensure resource scale matches expected log volume
+* The default resource configuration for the PCF Log Search tile is targeted primarily at consumption of platform logs. If you are also using the Experimental Firehose feature in order to consume application logs, this can put strain on the Log Parser and Elastic Search data nodes if application logging volume is high. 
+    * In order to determine if you may need to scale your clusters to support application logging consumption, please [Find the Rate of Incoming Messages](https://docs.pivotal.io/logsearch/installing.html#firehose) and then look to the table shown in [Scaling](https://docs.pivotal.io/logsearch/scaling.html#scale-up) for a suggested amount to further scale up your resources.
+
+
 ## <a id='cluster_health'></a>Review the current cluster health
 * Log Search includes a visualization of current cluster health. 
 It is accessible at `logsearch_monitor.<SystemDomain>`
