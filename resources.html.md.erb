@@ -160,7 +160,7 @@ and then [Scale Up Your Cluster](https://docs.pivotal.io/logsearch/scaling.html#
 
 
 #### General Guidelines:
-* It is best practice to use more Log parser nodes than Elasticsearch Data nodes
-* Queue node should be using less than 10% of memory (indicates ingest rate < parsing/indexing rate)
-  * If node is using more than 10% memory, the number of parsers should be increased
+* It is best practice to use more Log Parser nodes than Elasticsearch Data Nodes
+* Queue node should be using less than 10% of memory. This indicates ingest rate < parsing/indexing rate
+  * If node is using more than 10% memory, the number of Parser nodes should be increased
 * Data nodes should not be above 90% disk usage
