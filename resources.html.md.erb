@@ -1,0 +1,161 @@
+---
+title: Logs Search&reg; for Pivotal Cloud Foundry Documentation
+owner: PCF Metrics
+---
+
+##<a id="requirements"></a> Resource Requirements
+The following table shows the default resource and IP requirements for installing the tile:
+<table border="1" class="nice">
+	<tr>
+		<th>Product</th>
+		<th>Resource</th>
+		<th>Instances</th>
+		<th>CPU</th>
+		<th>Ram</th>
+		<th>Ephemeral</th>
+		<th>Persistent</th>
+		<th>Static IP</th>
+		<th>Dynamic IP</th>
+	</tr>
+	<tr>
+ 		<td>Log Search</td>
+	 	<td>Elasticsearch Master</td>
+	 	<td>1</td>
+	 	<td>1</td>
+	 	<td>2GB</td>
+	 	<td>8GB</td>
+	 	<td>5GB</td>
+	 	<td>1</td>
+	 	<td>0</td>
+ 	</tr>
+ 	<tr>
+ 		<td>Log Search</td>
+ 		<td>Elasticsearch Data Node</td>
+ 		<td>2</td>
+ 		<td>1</td>
+ 		<td>6GB</td>
+ 		<td>8GB</td>
+ 		<td>50GB</td>
+ 		<td>2</td>
+ 		<td>0</td>
+ 	</tr>
+ 	<tr>
+ 		<td>Log Search</td>
+ 		<td>Maintenance</td>
+ 		<td>1</td>
+ 		<td>1</td>
+ 		<td>1GB</td>
+ 		<td>8GB</td>
+ 		<td>0</td>
+ 		<td>1</td>
+ 		<td>0</td>
+ 	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Queue</td>
+		<td>1</td>
+		<td>1</td>
+		<td>2GB</td>
+		<td>8GB</td>
+		<td>5GB</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Log Parser</td>
+		<td>2</td>
+		<td>1</td>
+		<td>2GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>2</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Ingestor</td>
+		<td>1</td>
+		<td>1</td>
+		<td>2GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Kibana</td>
+		<td>1</td>
+		<td>1</td>
+		<td>2GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Cluster Monitor</td>
+		<td>1</td>
+		<td>2</td>
+		<td>4GB</td>
+		<td>8GB</td>
+		<td>10GB</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Router</td>
+		<td>1</td>
+		<td>1</td>
+		<td>1GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Firehose to Syslog</td>
+		<td>1</td>
+		<td>1</td>
+		<td>1GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>1</td>
+		<td>0</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Enable Shard Allocation(Required)</td>
+		<td>1</td>
+		<td>1</td>
+		<td>1GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>0</td>
+		<td>1</td>
+	</tr>
+	<tr>
+		<td>Log Search</td>
+		<td>Smoke Tests</td>
+		<td>1</td>
+		<td>1</td>
+		<td>1GB</td>
+		<td>8GB</td>
+		<td>0</td>
+		<td>0</td>
+		<td>1</td>
+	</tr>
+</table>
+
+###<a id="notes"></a> Notes and Guidelines
+
+* If you use Firehose to consume application logs in addition to platform logs, you 
+will probably need to scale up from the values above. See [Find the Rate of Incoming Messages](https://docs.pivotal.io/logsearch/installing.html#firehose) 
+and then [Scale Up Your Cluster](https://docs.pivotal.io/logsearch/scaling.html#scale-up).
+* You should use more Log Parser nodes than Elasticsearch Data Nodes
+* Queue node should use less than 10% of memory. This indicates that the ingest rate is less than the parsing/indexing rate. If the queue node uses 10% memory or above, increase the number of Parser nodes.
+* Data nodes should not be above 90% disk usage.
