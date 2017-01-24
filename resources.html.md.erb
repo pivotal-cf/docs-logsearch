@@ -1,5 +1,5 @@
 ---
-title: Logs Search&reg; for Pivotal Cloud Foundry Documentation
+title: PCF Log Search Resources
 owner: PCF Metrics
 ---
 
@@ -11,7 +11,7 @@ The following table shows the default resource and IP requirements for installin
 		<th>Resource</th>
 		<th>Instances</th>
 		<th>CPU</th>
-		<th>Ram</th>
+		<th>RAM</th>
 		<th>Ephemeral</th>
 		<th>Persistent</th>
 		<th>Static IP</th>
@@ -129,7 +129,7 @@ The following table shows the default resource and IP requirements for installin
 	</tr>
 	<tr>
 		<td>Log Search</td>
-		<td>Enable Shard Allocation(Required)</td>
+		<td>Enable Shard Allocation (Required)</td>
 		<td>1</td>
 		<td>1</td>
 		<td>1GB</td>
@@ -151,11 +151,11 @@ The following table shows the default resource and IP requirements for installin
 	</tr>
 </table>
 
-###<a id="notes"></a> Notes and Guidelines
+##<a id="notes"></a> Guidelines
 
 * If you use Firehose to consume application logs in addition to platform logs, you 
 will probably need to scale up from the values above. See [Find the Rate of Incoming Messages](https://docs.pivotal.io/logsearch/installing.html#firehose) 
 and then [Scale Up Your Cluster](https://docs.pivotal.io/logsearch/scaling.html#scale-up).
-* You should use more Log Parser nodes than Elasticsearch Data Nodes
-* Queue node should use less than 10% of memory. This indicates that the ingest rate is less than the parsing/indexing rate. If the queue node uses 10% memory or above, increase the number of Parser nodes.
+* You should use more log parser nodes than Elasticsearch data nodes.
+* Queue node should use less than 10% of memory. This indicates that the ingest rate is less than the parsing/indexing rate. If the queue node uses 10% memory or above, increase the number of parser nodes.
 * Data nodes should not be above 90% disk usage.
