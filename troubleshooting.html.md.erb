@@ -36,7 +36,7 @@ in a “broken” state; specifically it is unable to create new daily indexes a
        
 ## <a id='resource_scale'></a>Confirm that Resource Scale Matches Log Volume
 
-* The default resource configuration for the PCF Log Search tile is targeted primarily at consumption of platform logs. If you are also using the Experimental Firehose feature in order to consume application logs, this can put strain on the Log Parser and Elastic Search data nodes if application logging volume is high. 
+* The default resource configuration for the PCF Log Search tile is targeted primarily at consumption of platform logs. If you are also using the Experimental Firehose feature in order to consume application logs, this can put strain on the Log Parser and Elasticsearch data nodes if application logging volume is high. 
     * In order to determine if you may need to scale your clusters to support application logging consumption, please [Find the Rate of Incoming Messages](https://docs.pivotal.io/logsearch/installing.html#firehose) and then look to the table shown in [Scaling](https://docs.pivotal.io/logsearch/scaling.html#scale-up) for a suggested amount to further scale up your resources.
 <p class="note warning">
  <strong>WARNING: </strong> If you recently upgraded to PCF v1.10 or later,
@@ -60,7 +60,7 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   `Log Search > Resource Config`
     
     
-## <a id='data_nodes_at_maximum'></a>Elastic Search Data Nodes at Maximum
+## <a id='data_nodes_at_maximum'></a>Check if Elasticsearch Data Nodes at Maximum Disk
 
 * This issue is most commonly caused by a Redis queuing issue, and is often evident in product logs 
   * Example log message: 
@@ -70,17 +70,17 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
 1. Restart the ingestor and wait a few minutes.
 1. If the cluster health continues to be unhealthy, scale up the size of the clusters. 
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
-  * Example: If the Elastic Search data nodes are running near maximum on persistent disk, consider increasing the persistent disk or instance count to add more capacity.
+  * Example: If the Elasticsearch data nodes are running near maximum on persistent disk, consider increasing the persistent disk or instance count to add more capacity.
 
 
-## <a id='parser_at_maximum'></a>Parser VMs at Maximum CPU
+## <a id='parser_at_maximum'></a>Check if Parser VMs at Maximum CPU
 
 * As a general rule, use more Log parser nodes than Elasticsearch Data nodes. 
 * Scale up parser nodes until the average CPU goes down.
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
 
 
-## <a id='elasticsearch_master'></a>Multiple Elastic Search Master VMs (v1.0.1 and earlier)
+## <a id='elasticsearch_master'></a>Multiple Elasticsearch Master VMs (v1.0.1 and earlier)
 
-* Ensure there is only one Elastic Search Master VM. The product cannot support running with more than one 
-Elastic Search master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
+* Ensure there is only one Elasticsearch Master VM. The product cannot support running with more than one 
+Elasticsearch master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
