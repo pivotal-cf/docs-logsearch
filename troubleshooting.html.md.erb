@@ -10,11 +10,11 @@ This topic describes how to resolve common issues with missing logs the Pivotal 
 If not all logs expected are being received and displayed in the Log Search Kibana UI, 
 the following items should be validated as part of the troubleshooting process.
 
-## <a id='enable_shard_allocation'></a> Ensure the required Enable Shard Allocation errand is enabled
+## <a id='enable_shard_allocation'></a> Confirm that Shard Allocation is Enabled
   
 * Disabling the **Enable Shard Allocation** errand and applying changes that affect 
 Elasticsearch nodes prevents new daily indexes from being created. 
-When updating stemcells it is tempting to disable the “Enable Shard Allocation” 
+When updating stemcells it is tempting to disable the **Enable Shard Allocation** 
 errand to speed up the deployment. Unfortunately doing this leaves Elasticsearch
 in a “broken” state; specifically it is unable to create new daily indexes at midnight UTC.
    
@@ -27,20 +27,24 @@ in a “broken” state; specifically it is unable to create new daily indexes a
  the `Log Search > Errand` screen, and **Apply Changes**.
 
 
-## <a id='installation_steps'></a>Ensure the prescribed installation steps were followed
+## <a id='installation_steps'></a>Confirm Correct Installation
+
 * Log Search (v1.0.2 and later) requires two important installation steps in order to receive all logs/metrics expected 
   * Ensure NATS credentials from the **Ops Manager** tile were [entered](https://docs.pivotal.io/logsearch/installing.html#install) in Log Search tile. 
   * Ensure **System Logging** was correctly [configured](https://docs.pivotal.io/logsearch/installing.html#elastic-runtime) in Elastic Runtime with IP information from Log Search tile.
   
        
-## <a id='resource_scale'></a>Ensure resource scale matches expected log volume
+## <a id='resource_scale'></a>Confirm that Resource Scale Matches Log Volume
+
 * The default resource configuration for the PCF Log Search tile is targeted primarily at consumption of platform logs. If you are also using the Experimental Firehose feature in order to consume application logs, this can put strain on the Log Parser and Elastic Search data nodes if application logging volume is high. 
     * In order to determine if you may need to scale your clusters to support application logging consumption, please [Find the Rate of Incoming Messages](https://docs.pivotal.io/logsearch/installing.html#firehose) and then look to the table shown in [Scaling](https://docs.pivotal.io/logsearch/scaling.html#scale-up) for a suggested amount to further scale up your resources.
 <p class="note warning">
- <strong>WARNING: </strong> If using Log Search to consume application logs on PCF v1.10 or later, you will very likely need to scale up to accommodate the increased Loggregator message throughput. See [gRPC in Loggregator](https://docs.pivotal.io/pivotalcf/1-10/pcf-release-notes/runtime-rn.html#loggregator) for more info.
+ <strong>WARNING: </strong> If you recently upgraded to PCF v1.10 or later,
+ you will likely need to [scale up](./scaling.html#scale-up) your Log Search cluster to accommodate higher Loggregator message throughput. See [gRPC in Loggregator](https://docs.pivotal.io/pivotalcf/1-10/pcf-release-notes/runtime-rn.html#loggregator) for more info.
     </p>
 
-## <a id='cluster_health'></a>Review the current cluster health
+## <a id='cluster_health'></a>Review Current Cluster Health
+
 * Log Search includes a visualization of current cluster health. 
 It is accessible at `logsearch_monitor.<SystemDomain>`
 
@@ -56,7 +60,8 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   `Log Search > Resource Config`
     
     
-## <a id='data_nodes_at_maximum'></a>If Elastic Search data nodes are consistently running at maximum 
+## <a id='data_nodes_at_maximum'></a>Elastic Search Data Nodes at Maximum
+
 * This issue is most commonly caused by a Redis queuing issue, and is often evident in product logs 
   * Example log message: 
   
@@ -68,12 +73,14 @@ It is accessible at `logsearch_monitor.<SystemDomain>`
   * Example: If the Elastic Search data nodes are running near maximum on persistent disk, consider increasing the persistent disk or instance count to add more capacity.
 
 
-## <a id='parser_at_maximum'></a>If Parser VMs are consistently running at maximum CPU
+## <a id='parser_at_maximum'></a>Parser VMs at Maximum CPU
+
 * As a general rule, use more Log parser nodes than Elasticsearch Data nodes. 
 * Scale up parser nodes until the average CPU goes down.
   * Reference: [Log Search Scaling Guide](https://docs.pivotal.io/logsearch/scaling.html#need) 
 
 
-## <a id='elasticsearch_master'></a>If multiple Elastic Search Master VMs (v1.0.1 and earlier)
+## <a id='elasticsearch_master'></a>Multiple Elastic Search Master VMs (v1.0.1 and earlier)
+
 * Ensure there is only one Elastic Search Master VM. The product cannot support running with more than one 
 Elastic Search master VM. The ability to accidentally scale this was removed as of v1.0.2 and later.
