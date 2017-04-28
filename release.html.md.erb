@@ -3,15 +3,35 @@ title: Release Notes
 owner: Metrix
 ---
 
+## <a id="latest"></a> 1.0.11
+**Release Date: April 28, 2017**
+
+### Notes
+
+* Updates the stemcell version required to v3363.20
+
+### Known Issues
+
+* During a stemcell upgrade there will be 2 x ~2 min (time it takes your IaaS to create new VM) intervals where logs 
+  are NOT ingested.  This happens when the singleton Queue and Router nodes are recreated.  There is unfortunately
+  no workaround at this stage.
+  
+    ![Periods of no indexing during stemcell upgrade screenshot](images/no_ingesting_intervals_during_stemcell_update.png) 
+
+* Disabling the "Enable Shard Allocation" errand and applying changes that affect Elasticsearch nodes will prevent new daily indexes from being created.  When updating stemcells it is tempting to disable the "Enable Shard Allocation" errand to speed up the deployment. Unfortunately doing this will leave Elasticsearch in a "broken" state; specifically it will be unable to create new daily indexes at midnight UTC.
+  <br><br>
+  If you suspect this has happened; check whether the your cluster's `cluster.routing.allocation.enable` setting has been set to something other than `all` by querying: `http://logsearch.<system_domain>/elasticsearch/_cluster/settings?pretty`.  If it has, you can correct this by re-enabling the errand in Ops Manager via the Log Search > Errand screen, and Applying Changes.
+
 ## <a id="latest"></a> 1.0.10
 **Release Date: April 20, 2017**
 
 ### Notes
 
-* Updates the stemcell version required to v3363
+* Updates the stemcell version required to v3363.15
 
 ### Known Issues
 
+* If use of stemcell v3363.19 or later is desired, please use Log Search v1.0.11, as v1.0.10 began experiencing build issues beginning in v3363.19. Patch v1.0.11 resolves for stemcell v3363.19 and later. 
 * During a stemcell upgrade there will be 2 x ~2 min (time it takes your IaaS to create new VM) intervals where logs 
   are NOT ingested.  This happens when the singleton Queue and Router nodes are recreated.  There is unfortunately
   no workaround at this stage.
