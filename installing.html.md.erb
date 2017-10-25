@@ -3,17 +3,6 @@ title: Installing PCF Log Search
 owner: PCF Metrics
 ---
 
-<style>
-    .note.warning {
-        background-color: #fdd;
-        border-color: #fbb
-    }
-
-    .note.warning:before {
-        color: #f99;
-    }
-</style>
-
 This document describes how to install and configure Pivotal Cloud Foundry (PCF) Log Search.
 
 ## <a id="install"></a>Install from Ops Manager
@@ -31,15 +20,15 @@ To install PCF Log Search, follow the standard procedure below for installing Pi
     1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by 1,000,000 for every 2GB of RAM in the queue node. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.
 1. Click **Apply Changes**.
 
-##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
+##<a id="elastic-runtime"></a>Configure Pivotal Application Service and Data Service Logs
 
 
-You can configure Elastic Runtime and other PCF Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
+You can configure Pivotal Application Service (PAS) and other PCF Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
 
 <p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
 
 0.  In the **Log Search** tile, click **Status** and record the IP address of the **Router** VM.
-0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
+0.  In the PAS tile, click **System Logging**. Complete the following fields:
 	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1.
 	0. **External Syslog Aggregator Port**: Enter `514`.
 	0. **External Syslog Network Protocol**: Choose `TCP`.
@@ -47,12 +36,12 @@ You can configure Elastic Runtime and other PCF Data Service tiles to send their
 0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP address from step 1, port `514`, and protocol `TCP`.
 0.  Click **Apply Changes**.
 
-## <a id="firehose"></a> Consume App Logs from the Elastic Runtime Firehose
+## <a id="firehose"></a> Consume App Logs from the PAS Firehose
 
-By default, Log Search attaches to the Elastic Runtime Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. You can also configure Log Search to consume app logs and metrics, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
+By default, Log Search attaches to the PAS Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. You can also configure Log Search to consume app logs and metrics, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
 
 ### Find the Rate of Incoming Messages
-You can discover the rate of messages coming from the Elastic Runtime Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
+You can discover the rate of messages coming from the PAS Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
 
 Run following command to get a rough estimate of the volume of `LogMessages` coming from the Firehose. The command outputs the amount of `LogMessages` per second every 10 seconds.
 
