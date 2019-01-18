@@ -16,57 +16,67 @@ owner: PCF Metrics
 
 This document describes how to install and configure Pivotal Cloud Foundry (PCF) Log Search.
 
-## <a id="install"></a>Install from Ops Manager
 
-To install PCF Log Search, follow the standard procedure below for installing Pivotal Ops Manager tiles:
+## <a id="install"></a> Install from Ops Manager
+
+To install PCF Log Search, follow the standard procedure below for installing Ops Manager tiles:
 
 1. Download the product file from the [Log Search section of Pivotal Network](https://network.pivotal.io/products/pivotal-cloud-foundry-log-search).
+
 1. Upload the product file to your Ops Manager installation.
+
 1. Click **Add** next to the uploaded product description in the **Available Products** view to add this product to your staging area.
+
 1. Configure **Assign AZs and Networks**.
-	<p class="note"><strong>Note</strong>: Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs to balance jobs between them or you risk partial data loss. Contact your IAAS provider if you are unsure about the network latency between your AZs.</p>
+	<p class="note"><strong>Note:</strong> Do not balance jobs between multiple AZs if your environment has relatively high network latency between AZs ( &gt; 5ms ). You must have consistent low latency between AZs to balance jobs between them or you risk partial data loss. Contact your IAAS provider if you are unsure about the network latency between your AZs.</p>
+
 1. Configure **Settings**:
 	1. Specify the log retention period in number of days. The default is `7`, the minimum is `1`, and the maximum is `15`. 
 	1. Specify the NATS Credentials for the BOSH Director, which you can find under the **Credentials** tab on the BOSH Director tile.
-    1. Review the **max queue length** field. By default, the queue node has 2GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by 1,000,000 for every 2GB of RAM in the queue node. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.
+    1. Review the **max queue length** field. By default, the queue node has 2&nbsp;GB of RAM, and the **max queue length** is set to `1000000`. As a general rule, increase this value by 1,000,000 for every 2&nbsp;GB of RAM in the queue node. You can view the queue node RAM in the **Resource Config** section under the **VM Type** column for the **Queue** job.
+
 1. Click **Apply Changes**.
 
-##<a id="elastic-runtime"></a>Configure Elastic Runtime and Data Service Logs
+
+## <a id="elastic-runtime"></a> Configure Pivotal Application Service and Data Service Logs
+
+You can configure Pivotal Application Service (PAS) and other PCF Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
+
+<p class="note"><strong>Note:</strong> PCF Log Search does not support syslog over UDP.</p>
+
+1. In the **Log Search** tile, click **Status** and record the IP address of the **Router** VM.
+
+1. In the **Pivotal Application Service** tile, click **System Logging**. Complete the following fields:
+	1. **External Syslog Aggregator Hostname**: Enter the IP address from step 1.
+	1. **External Syslog Aggregator Port**: Enter `514`.
+	1. **External Syslog Network Protocol**: Choose `TCP`.
+
+1. In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1, protocol `TCP`, and port `514`.
+
+1. For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP address from step 1, port `514`, and protocol `TCP`.
+
+1. Click **Apply Changes**.
 
 
-You can configure Elastic Runtime and other PCF Data Service tiles to send their component logs to the Log Search router through syslog over TCP.
+## <a id="firehose"></a> Consume App Logs from the PAS Firehose
 
-<p class="note"><strong>Note</strong>: PCF Log Search does not support syslog over UDP or RELP.</p>
+By default, Log Search attaches to the PAS Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. You can also configure Log Search to consume app logs and metrics, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
 
-0.  In the **Log Search** tile, click **Status** and record the IP address of the **Router** VM.
-0.  In the **Pivotal Elastic Runtime** tile, click **System Logging**. Complete the following fields:
-	0. **External Syslog Aggregator Hostname**: Enter the IP address from step 1.
-	0. **External Syslog Aggregator Port**: Enter `514`.
-	0. **External Syslog Network Protocol**: Choose `TCP`.
-0.  In the **RabbitMQ for PCF** tile, update the syslog forwarder settings with the IP address from step 1, protocol `TCP`, and port `514`.
-0.  For any other tiles you want to analyze with Log Search, such as MySQL, Redis, and Spring Cloud Services, update the syslog forwarder settings using the IP address from step 1, port `514`, and protocol `TCP`.
-0.  Click **Apply Changes**.
+### <a id='find-rate'></a> Find the Rate of Incoming Messages
 
-## <a id="firehose"></a> Consume App Logs from the Elastic Runtime Firehose
+You can discover the rate of messages coming from the PAS Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
 
-By default, Log Search attaches to the Elastic Runtime Firehose and consumes platform metrics, specifically the `ValueMetric`, `CounterEvent` and `Error` types. You can also configure Log Search to consume app logs and metrics, specifically the `ContainerMetric`, `LogMessage`, and `HttpStartStop` types.
-
-### Find the Rate of Incoming Messages
-You can discover the rate of messages coming from the Elastic Runtime Firehose by using the [nozzle plugin](https://docs.cloudfoundry.org/loggregator/cli-plugin.html) for the cf CLI.
-
-Run following command to get a rough estimate of the volume of `LogMessages` coming from the Firehose. The command outputs the amount of `LogMessages` per second every 10 seconds.
+Run the following command to get a rough estimate of the volume of `LogMessages` coming from the Firehose. The command outputs the amount of `LogMessages` per second every 10 seconds.
 
 <pre class="terminal">
 $ cf nozzle -filter LogMessage | pv -l -i10 -r >/dev/null
 [50.5 /s]
 </pre>
 
-### Configure Log Search to Receive App Logs
+### <a id='config-log-search'></a> Configure Log Search to Receive App Logs
 
-<p class="note warning">
-<strong>WARNING: </strong> Some applications send a large amount of application logs over the firehose, so you will need to scale up your cluster to handle 
-the additional load.  See the <a href=./scaling.html>Scaling</a> topic for details.
-</p>
+<p class="note warning"><strong>WARNING:</strong> Some applications send a large amount of application logs over the Firehose, so you will need to scale up your cluster to handle the additional load. See the <a href=./scaling.html>Scaling</a> topic for more information.</p>
 
 1. In the **Log Search** tile in Ops Manager, click **Experimental - Firehose** and check the additional Firehose event types you want to consume.
-2. Click **Apply Changes**.
+
+1. Click **Apply Changes**.
